@@ -1,3 +1,20 @@
+# Assignment 4b
+
+<img src="Assignment4b-assets/thumbnail.png" alt="DueStack Application Screenshot" width="1000" />
+
+## Deliverables
+
+1. **[Updated User Journey](Assignment4b-assets/USER_JOURNEY.md)**
+
+2. **[Screen Recording](Assignment4b-assets/recording-checkin-4b.mov)**
+
+   - **Alternative:** [Google Drive Video](https://drive.google.com/file/d/1w-uUkEvnyz7VUbl2JhV_xGUIKhSEYgW-/view?usp=sharing)
+
+3. **[Visual Design Study](<Assignment4b-assets/6.1040%20Visual%20Inspo%20-%20DueStack%20(1).pdf>)**
+   - **Alternative:** [Google Slides Presentation](https://docs.google.com/presentation/d/1__tKXgUeasagpQDpP_Ei6pshcn3f07D1M1u7-naokl0/edit?usp=sharing)
+
+---
+
 # Duestack Frontend
 
 A modern Vue.js application built with Vue 3, Vite, Vue Router, and Pinia.
