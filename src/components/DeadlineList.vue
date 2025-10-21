@@ -12,6 +12,7 @@
         :class="{
           overdue: isOverdue(deadline.due),
           completed: (deadline.status || 'NOT_STARTED') === 'DONE',
+          'in-progress': (deadline.status || 'NOT_STARTED') === 'IN_PROGRESS',
         }"
       >
         <div class="deadline-header">
@@ -97,15 +98,18 @@ function isOverdue(dueDate) {
 
 <style scoped>
 .deadline-list {
-  background: white;
+  background: var(--white);
   padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  border: 2px solid var(--black);
+  box-shadow: 4px 4px 0 var(--black);
 }
 
 h2 {
-  color: #2c3e50;
+  color: var(--black);
   margin-bottom: 1.5rem;
+  font-weight: 700;
+  font-size: 1.8rem;
 }
 
 .empty-state {
@@ -121,31 +125,39 @@ h2 {
 }
 
 .deadline-card {
-  background: #f9f9f9;
-  border-left: 4px solid #42b983;
-  border-radius: 6px;
+  background: var(--white);
+  border-left: 5px solid var(--burgundy);
+  border: 2px solid var(--black);
+  border-left-width: 5px;
+  border-left-color: var(--burgundy);
+  border-radius: 4px;
   padding: 1.5rem;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.1s, box-shadow 0.1s;
+  box-shadow: 3px 3px 0 var(--black);
 }
 
 .deadline-card:hover {
-  transform: translateX(4px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--black);
 }
 
 .deadline-card.overdue {
-  border-left-color: #e74c3c;
-  background: #fff5f5;
+  border-left-color: var(--royal-blue);
+  background: #f5f5ff;
 }
 
 .deadline-card.completed {
-  border-left-color: #95a5a6;
-  opacity: 0.7;
+  border-left-color: #666;
+  opacity: 0.6;
+}
+
+.deadline-card.in-progress {
+  border-left-color: var(--yellow);
 }
 
 .deadline-card.completed h3 {
   text-decoration: line-through;
-  color: #95a5a6;
+  color: #666;
 }
 
 .deadline-header {
@@ -160,9 +172,10 @@ h2 {
 }
 
 h3 {
-  color: #2c3e50;
+  color: var(--black);
   font-size: 1.2rem;
   margin: 0 0 0.5rem 0;
+  font-weight: 700;
 }
 
 .deadline-date {
@@ -172,13 +185,14 @@ h3 {
 }
 
 .overdue-badge {
-  background-color: #e74c3c;
-  color: white;
+  background-color: var(--royal-blue);
+  color: var(--white);
   padding: 0.2rem 0.5rem;
-  border-radius: 4px;
+  border-radius: 2px;
+  border: 1px solid var(--black);
   font-size: 0.75rem;
   margin-left: 0.5rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .deadline-meta {
@@ -186,12 +200,13 @@ h3 {
 }
 
 .source-badge {
-  background-color: #e0e0e0;
-  color: #555;
+  background-color: var(--light-gray);
+  color: var(--black);
   padding: 0.2rem 0.6rem;
-  border-radius: 4px;
+  border-radius: 2px;
+  border: 1px solid var(--black);
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .btn-delete {
@@ -231,23 +246,42 @@ h3 {
 
 .status-select:focus {
   outline: none;
-  border-color: #42b983;
+  border-color: var(--burgundy);
+  border-width: 2px;
 }
 
 .status-not_started {
   background-color: #f0f0f0;
   color: #666;
+  border-color: var(--burgundy);
 }
 
 .status-in_progress {
   background-color: #fff3cd;
   color: #856404;
-  border-color: #ffc107;
+  border-color: var(--yellow);
 }
 
 .status-done {
   background-color: #d4edda;
   color: #155724;
-  border-color: #28a745;
+  border-color: #666;
+}
+
+.status-select:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.status-not_started:hover {
+  border-color: var(--burgundy);
+}
+
+.status-in_progress:hover {
+  border-color: var(--yellow);
+}
+
+.status-done:hover {
+  border-color: #666;
 }
 </style>

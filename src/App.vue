@@ -2,9 +2,7 @@
   <div id="app">
     <header>
       <nav>
-        <div class="nav-brand">
-          <RouterLink to="/">DueStack</RouterLink>
-        </div>
+        <div class="nav-brand"></div>
         <div class="nav-links">
           <template v-if="authStore.isAuthenticated">
             <RouterLink to="/">Home</RouterLink>
@@ -42,9 +40,10 @@ async function handleLogout() {
 
 <style scoped>
 header {
-  background-color: #2c3e50;
+  background-color: transparent;
   padding: 1rem;
-  color: white;
+  color: var(--black);
+  border-bottom: 1px solid var(--light-gray);
 }
 
 nav {
@@ -55,43 +54,66 @@ nav {
   margin: 0 auto;
 }
 
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.mascot-logo {
+  width: 40px;
+  height: 33px;
+  filter: brightness(0) invert(1);
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.mascot-logo:hover {
+  transform: scale(1.1) rotate(5deg);
+  filter: brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(45deg);
+}
+
 .nav-brand a {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 700;
-  color: white;
+  color: var(--black);
   text-decoration: none;
+  letter-spacing: -0.5px;
 }
 
 .nav-links {
   display: flex;
   gap: 1.5rem;
   align-items: center;
+  margin-left: auto;
 }
 
 nav a {
-  color: white;
+  font-family: "Cinzel", serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  color: var(--black);
   text-decoration: none;
-  font-weight: 500;
-  transition: opacity 0.2s;
+  transition: color 0.2s;
 }
 
 nav a:hover {
-  opacity: 0.8;
+  color: var(--yellow);
 }
 
 nav a.router-link-active {
-  border-bottom: 2px solid #42b983;
+  border-bottom: 2px solid var(--yellow);
   padding-bottom: 0.25rem;
 }
 
 .user-info {
-  color: #42b983;
+  color: var(--burgundy);
   font-weight: 600;
 }
 
 .btn-logout {
-  background-color: #e74c3c;
-  color: white;
+  background-color: var(--burgundy);
+  color: var(--white);
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
@@ -101,12 +123,17 @@ nav a.router-link-active {
 }
 
 .btn-logout:hover {
-  background-color: #c0392b;
+  background-color: #5a0504;
 }
 
 main {
   max-width: 1200px;
   margin: 2rem auto;
   padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 200px);
 }
 </style>

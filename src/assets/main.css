@@ -1,4 +1,13 @@
-/* Global Styles */
+/* Global Styles - Academic Stacks Aesthetic */
+:root {
+  --royal-blue: #282880;
+  --burgundy: #760806;
+  --yellow: #ffd757;
+  --black: #000000;
+  --white: #ffffff;
+  --light-gray: #f5f5f5;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -6,13 +15,110 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
   color: #2c3e50;
   background-color: #f5f5f5;
+  position: relative;
+}
+
+/* Scattered background assets */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("/src/assets/rollercat.png"),
+    url("/src/assets/bananaman.png"), url("/src/assets/sheepdog.png"),
+    url("/src/assets/duckinheels.png"), url("/src/assets/threedrunkbirds.png"),
+    url("/src/assets/seal.png"), url("/src/assets/fourblinddogs.png"),
+    url("/src/assets/octopus.png"), url("/src/assets/skateboarddog.png"),
+    url("/src/assets/fishes.png"), url("/src/assets/fishman.png"),
+    url("/src/assets/fishman.png"), url("/src/assets/fishman.png"),
+    url("/src/assets/fishman.png"), url("/src/assets/fishman.png"),
+    url("/src/assets/rollercat.png"), url("/src/assets/bananaman.png"),
+    url("/src/assets/sheepdog.png"), url("/src/assets/duckinheels.png"),
+    url("/src/assets/threedrunkbirds.png"), url("/src/assets/seal.png"),
+    url("/src/assets/fourblinddogs.png"), url("/src/assets/octopus.png"),
+    url("/src/assets/skateboarddog.png"), url("/src/assets/fishes.png"),
+    url("/src/assets/fishman.png"), url("/src/assets/fishman.png"),
+    url("/src/assets/fishman.png"), url("/src/assets/fishman.png"),
+    url("/src/assets/rollercat.png"), url("/src/assets/bananaman.png"),
+    url("/src/assets/sheepdog.png"), url("/src/assets/duckinheels.png"),
+    url("/src/assets/threedrunkbirds.png"), url("/src/assets/seal.png"),
+    url("/src/assets/fourblinddogs.png"), url("/src/assets/octopus.png"),
+    url("/src/assets/skateboarddog.png"), url("/src/assets/fishes.png"),
+    url("/src/assets/fishman.png"), url("/src/assets/fishman.png"),
+    url("/src/assets/fishman.png"), url("/src/assets/fishman.png");
+  background-size: 80px 80px, 60px 60px, 100px 100px, 70px 70px, 90px 90px,
+    50px 50px, 85px 85px, 75px 75px, 65px 65px, 95px 95px, 55px 55px, 45px 45px,
+    65px 65px, 50px 50px, 70px 70px, 40px 40px, 35px 35px, 30px 30px, 25px 25px,
+    20px 20px, 45px 45px, 50px 50px, 55px 55px, 60px 60px, 65px 65px, 70px 70px,
+    75px 75px, 80px 80px, 85px 85px, 90px 90px, 95px 95px, 100px 100px,
+    105px 105px, 110px 110px, 115px 115px, 120px 120px, 125px 125px, 130px 130px,
+    135px 135px, 140px 140px, 145px 145px, 150px 150px, 155px 155px, 160px 160px,
+    165px 165px, 170px 170px, 175px 175px, 180px 180px, 185px 185px, 190px 190px,
+    195px 195px, 200px 200px, 205px 205px, 210px 210px, 215px 215px, 220px 220px,
+    225px 225px, 230px 230px, 235px 235px, 240px 240px, 245px 245px, 250px 250px;
+  background-position: 5% 10%, 25% 5%, 45% 15%, 65% 8%, 85% 12%, 95% 20%,
+    10% 30%, 30% 35%, 50% 40%, 70% 45%, 90% 50%, 15% 60%, 35% 65%, 55% 70%,
+    75% 75%, 95% 80%, 5% 90%, 25% 85%, 45% 95%, 65% 90%, 85% 95%;
+  background-repeat: no-repeat;
+  opacity: 0.12;
+  z-index: -1;
+}
+
+/* Individual rotated assets */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("/src/assets/rollercat.png"),
+    url("/src/assets/bananaman.png"), url("/src/assets/sheepdog.png"),
+    url("/src/assets/duckinheels.png"), url("/src/assets/threedrunkbirds.png"),
+    url("/src/assets/fishman.png"), url("/src/assets/fishman.png");
+  background-size: 60px 60px, 70px 70px, 80px 80px, 55px 55px, 75px 75px,
+    50px 50px, 45px 45px;
+  background-position: 12% 20%, 37% 45%, 62% 70%, 87% 25%, 15% 80%, 40% 5%,
+    65% 90%, 90% 60%, 5% 95%, 95% 95%, 3% 85%, 97% 85%, 1% 75%, 99% 75%;
+  background-repeat: no-repeat;
+  opacity: 0.1;
+  z-index: -1;
+  transform: rotate(15deg);
+}
+
+/* Additional scattered elements */
+#app::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("/src/assets/seal.png"),
+    url("/src/assets/fourblinddogs.png"), url("/src/assets/octopus.png"),
+    url("/src/assets/skateboarddog.png"), url("/src/assets/fishes.png"),
+    url("/src/assets/fishman.png"), url("/src/assets/fishman.png"),
+    url("/src/assets/fishman.png");
+  background-size: 45px 45px, 65px 65px, 55px 55px, 60px 60px, 70px 70px,
+    50px 50px, 40px 40px, 35px 35px;
+  background-position: 8% 25%, 33% 50%, 58% 75%, 83% 10%, 18% 60%, 43% 85%,
+    68% 15%, 93% 40%, 2% 90%, 98% 90%, 4% 80%, 96% 80%, 6% 70%, 94% 70%;
+  background-repeat: no-repeat;
+  opacity: 0.08;
+  z-index: -1;
+  transform: rotate(-20deg);
 }
 
 #app {
@@ -25,4 +131,82 @@ code {
   background-color: #f4f4f4;
   padding: 0.2rem 0.4rem;
   border-radius: 3px;
+}
+
+/* Cinzel Font Classes for DueStack Titles */
+.cinzel-title {
+  font-family: "Cinzel", serif;
+  font-optical-sizing: auto;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.cinzel-title-light {
+  font-family: "Cinzel", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.cinzel-title-bold {
+  font-family: "Cinzel", serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.cinzel-title-black {
+  font-family: "Cinzel", serif;
+  font-optical-sizing: auto;
+  font-weight: 900;
+  font-style: normal;
+}
+
+/* Open Sans Font Classes */
+.open-sans-light {
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+
+.open-sans-regular {
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+
+.open-sans-medium {
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+
+.open-sans-semibold {
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+
+.open-sans-bold {
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+
+.open-sans-extrabold {
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 800;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
 }

@@ -92,16 +92,19 @@ function cancel() {
 
 <style scoped>
 .create-course-form {
-  background: white;
+  background: var(--white);
   padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  border: 2px solid var(--black);
+  box-shadow: 4px 4px 0 var(--black);
   margin-bottom: 2rem;
 }
 
 h2 {
-  color: #2c3e50;
+  color: var(--black);
   margin-bottom: 1.5rem;
+  font-weight: 700;
+  font-size: 1.5rem;
 }
 
 .form-group {
@@ -126,7 +129,8 @@ input {
 
 input:focus {
   outline: none;
-  border-color: #42b983;
+  border-color: var(--burgundy);
+  border-width: 2px;
 }
 
 .error-message {
@@ -146,35 +150,39 @@ input:focus {
 .btn-primary,
 .btn-secondary {
   padding: 0.75rem 1.5rem;
-  border: none;
+  border: 2px solid var(--black);
   border-radius: 4px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.1s;
 }
 
 .btn-primary {
-  background-color: #42b983;
-  color: white;
+  background-color: var(--burgundy);
+  color: var(--white);
   flex: 1;
+  box-shadow: 2px 2px 0 var(--black);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #359268;
+  background-color: #5a0504;
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--black);
 }
 
 .btn-primary:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
 }
 
 .btn-secondary {
-  background-color: #e0e0e0;
-  color: #555;
+  background-color: var(--white);
+  color: var(--black);
 }
 
 .btn-secondary:hover {
-  background-color: #d0d0d0;
+  background-color: var(--light-gray);
 }
 </style>

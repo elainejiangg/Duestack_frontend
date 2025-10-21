@@ -118,19 +118,21 @@ async function handleRegister() {
 }
 
 .register-card {
-  background: white;
+  background: var(--white);
   padding: 2.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  border: 2px solid var(--black);
+  box-shadow: 6px 6px 0 var(--black);
   width: 100%;
   max-width: 400px;
 }
 
 h1 {
-  color: #2c3e50;
-  font-size: 1.8rem;
+  color: var(--burgundy);
+  font-size: 2rem;
   margin-bottom: 2rem;
   text-align: center;
+  font-weight: 700;
 }
 
 .form-group {
@@ -155,24 +157,28 @@ input {
 
 input:focus {
   outline: none;
-  border-color: #42b983;
+  border-color: var(--burgundy);
+  border-width: 2px;
 }
 
 .btn-primary {
   width: 100%;
   padding: 0.875rem;
-  background-color: #42b983;
-  color: white;
-  border: none;
+  background-color: var(--burgundy);
+  color: var(--white);
+  border: 2px solid var(--black);
   border-radius: 4px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.1s;
+  box-shadow: 3px 3px 0 var(--black);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #359268;
+  background-color: #5a0504;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--black);
 }
 
 .btn-primary:disabled {
@@ -196,9 +202,9 @@ input:focus {
 }
 
 .login-link a {
-  color: #42b983;
+  color: var(--burgundy);
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .login-link a:hover {

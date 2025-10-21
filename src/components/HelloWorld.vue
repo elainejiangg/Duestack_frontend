@@ -24,7 +24,7 @@ defineProps({
 }
 
 h2 {
-  color: #42b983;
+  color: var(--royal-blue);
   font-size: 1.8rem;
   margin-bottom: 1rem;
 }

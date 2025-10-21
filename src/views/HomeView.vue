@@ -1,22 +1,29 @@
 <template>
   <div class="home">
-    <h1>Welcome to DueStack</h1>
+    <div class="mascot-container">
+      <img
+        src="/src/assets/mascot.png"
+        alt="DueStack Mascot"
+        class="home-mascot"
+      />
+    </div>
+    <h1 class="cinzel-title">Welcome to DueStack</h1>
     <p class="subtitle">Your AI-powered deadline management solution</p>
 
     <div class="quick-actions">
       <RouterLink to="/courses" class="action-card">
-        <h2>📚 Courses</h2>
+        <h2 class="cinzel-title">📚 Courses</h2>
         <p>Manage your courses and organize deadlines by class</p>
       </RouterLink>
 
       <div class="action-card coming-soon">
-        <h2>📄 Documents</h2>
+        <h2 class="cinzel-title">📄 Documents</h2>
         <p>Upload syllabi and extract deadlines with AI</p>
         <span class="badge">Coming Soon</span>
       </div>
 
       <div class="action-card coming-soon">
-        <h2>📅 Calendar</h2>
+        <h2 class="cinzel-title">📅 Calendar</h2>
         <p>View all your deadlines in one place</p>
         <span class="badge">Coming Soon</span>
       </div>
@@ -36,16 +43,35 @@ import { RouterLink } from "vue-router";
   margin: 0 auto;
 }
 
+.mascot-container {
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.home-mascot {
+  width: 120px;
+  height: 100px;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.home-mascot:hover {
+  transform: scale(1.05) rotate(2deg);
+}
+
 h1 {
-  color: #42b983;
+  color: var(--royal-blue);
   font-size: 2.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.25rem;
 }
 
 .subtitle {
   font-size: 1.2rem;
-  color: #666;
+  color: var(--royal-blue);
+  opacity: 0.7;
   margin-bottom: 3rem;
+  font-style: italic;
 }
 
 .quick-actions {
@@ -58,8 +84,9 @@ h1 {
 .action-card {
   background: white;
   padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  border: 2px solid var(--black);
+  box-shadow: 4px 4px 0 var(--black);
   transition: transform 0.2s, box-shadow 0.2s;
   text-decoration: none;
   color: inherit;
@@ -67,8 +94,8 @@ h1 {
 }
 
 .action-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--black);
 }
 
 .action-card.coming-soon {
@@ -97,11 +124,13 @@ h1 {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background-color: #42b983;
+  background-color: var(--royal-blue);
   color: white;
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
   font-size: 0.75rem;
   font-weight: 600;
+  opacity: 1;
+  z-index: 10;
 }
 </style>

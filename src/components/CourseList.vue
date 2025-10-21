@@ -1,6 +1,6 @@
 <template>
   <div class="course-list">
-    <h2>My Courses</h2>
+    <h2 class="cinzel-title">My Courses</h2>
     <div v-if="courses.length === 0" class="empty-state">
       <p>No courses yet. Create your first course to get started!</p>
     </div>
@@ -40,21 +40,31 @@ defineEmits(["delete-course", "view-deadlines"]);
 
 <style scoped>
 .course-list {
-  background: white;
+  background: var(--white);
   padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  border: 2px solid var(--black);
+  box-shadow: 4px 4px 0 var(--black);
 }
 
 h2 {
-  color: #2c3e50;
+  color: var(--black);
   margin-bottom: 1.5rem;
+  font-weight: 700;
+  font-size: 1.8rem;
+}
+
+h2.cinzel-title {
+  font-family: "Cinzel", serif;
+  font-optical-sizing: auto;
+  font-weight: 900;
+  font-style: normal;
 }
 
 .empty-state {
   text-align: center;
   padding: 3rem 1rem;
-  color: #999;
+  color: #666;
 }
 
 .courses-grid {
@@ -64,16 +74,17 @@ h2 {
 }
 
 .course-card {
-  background: #f9f9f9;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
+  background: var(--royal-blue);
+  border: 2px solid var(--black);
+  border-radius: 4px;
   padding: 1.5rem;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.1s, box-shadow 0.1s;
+  box-shadow: 3px 3px 0 var(--black);
 }
 
 .course-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--black);
 }
 
 .course-header {
@@ -84,13 +95,21 @@ h2 {
 }
 
 h3 {
-  color: #42b983;
-  font-size: 1.3rem;
+  font-family: "Cinzel", serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+  color: var(--white);
+  font-size: 1.4rem;
   margin: 0;
 }
 
 .course-title {
-  color: #555;
+  font-family: "Cinzel", serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  color: var(--white);
   margin-bottom: 1rem;
   font-size: 0.95rem;
 }
@@ -98,7 +117,7 @@ h3 {
 .btn-delete {
   background: transparent;
   border: none;
-  color: #e74c3c;
+  color: var(--white);
   font-size: 2rem;
   line-height: 1;
   cursor: pointer;
@@ -108,12 +127,13 @@ h3 {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: 2px;
   transition: background-color 0.2s;
+  font-weight: 700;
 }
 
 .btn-delete:hover {
-  background-color: #fee;
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .course-actions {
@@ -124,16 +144,16 @@ h3 {
 .btn-view {
   flex: 1;
   padding: 0.5rem 1rem;
-  background-color: #42b983;
-  color: white;
-  border: none;
+  background-color: var(--yellow);
+  color: var(--black);
+  border: 2px solid var(--black);
   border-radius: 4px;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
   transition: background-color 0.2s;
 }
 
 .btn-view:hover {
-  background-color: #359268;
+  background-color: #ffc727;
 }
 </style>

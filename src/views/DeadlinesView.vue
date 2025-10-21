@@ -3,8 +3,10 @@
     <div class="header">
       <div>
         <button @click="goBack" class="btn-back">← Back to Courses</button>
-        <h1 v-if="course">{{ course.courseCode }} - {{ course.title }}</h1>
-        <h1 v-else>Deadlines</h1>
+        <h1 v-if="course" class="cinzel-title">
+          {{ course.courseCode }} - {{ course.title }}
+        </h1>
+        <h1 v-else class="cinzel-title">Deadlines</h1>
       </div>
       <button @click="showCreateForm = !showCreateForm" class="btn-toggle">
         {{ showCreateForm ? "Cancel" : "+ New Deadline" }}
@@ -150,39 +152,44 @@ onMounted(() => {
 .btn-back {
   background: transparent;
   border: none;
-  color: #42b983;
+  color: var(--burgundy);
   font-size: 1rem;
   cursor: pointer;
   padding: 0.5rem 0;
   margin-bottom: 0.5rem;
-  font-weight: 500;
+  font-weight: 600;
   transition: color 0.2s;
 }
 
 .btn-back:hover {
-  color: #359268;
+  color: #5a0504;
 }
 
 h1 {
-  color: #2c3e50;
-  font-size: 2rem;
+  color: var(--black);
+  font-size: 2.5rem;
   margin: 0;
+  font-weight: 700;
+  letter-spacing: -1px;
 }
 
 .btn-toggle {
   padding: 0.75rem 1.5rem;
-  background-color: #42b983;
-  color: white;
-  border: none;
+  background-color: var(--royal-blue);
+  color: var(--white);
+  border: 2px solid var(--black);
   border-radius: 4px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.1s;
+  box-shadow: 2px 2px 0 var(--black);
 }
 
 .btn-toggle:hover {
-  background-color: #359268;
+  background-color: #1f1f66;
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--black);
 }
 
 .loading {
