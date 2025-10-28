@@ -46,6 +46,9 @@
               completed: (deadline.status || 'NOT_STARTED') === 'DONE',
               'in-progress':
                 (deadline.status || 'NOT_STARTED') === 'IN_PROGRESS',
+              'not-started':
+                (deadline.status || 'NOT_STARTED') === 'NOT_STARTED' &&
+                !isOverdue(deadline.due),
               overdue:
                 isOverdue(deadline.due) &&
                 (deadline.status || 'NOT_STARTED') !== 'DONE',
@@ -57,7 +60,18 @@
               }}</span>
               <h4>{{ deadline.title }}</h4>
             </div>
-            <p class="deadline-time">{{ formatTime(deadline.due) }}</p>
+            <p class="deadline-time">
+              {{ formatTime(deadline.due) }}
+              <span
+                v-if="
+                  isOverdue(deadline.due) &&
+                  (deadline.status || 'NOT_STARTED') !== 'DONE'
+                "
+                class="overdue-badge"
+              >
+                Overdue
+              </span>
+            </p>
             <div class="deadline-item-actions">
               <select
                 :value="deadline.status || 'NOT_STARTED'"
@@ -339,6 +353,61 @@ function isOverdue(dueDate) {
   margin-bottom: 0 !important;
 }
 
+/* Style the popover to match */
+:deep(.vc-popover-content-wrapper) {
+  border-radius: 4px !important;
+  border: 2px solid var(--black) !important;
+  box-shadow: 2px 2px 0 var(--black) !important;
+  background-color: var(--white) !important;
+}
+
+:deep(.vc-popover-content) {
+  background-color: var(--white) !important;
+}
+
+:deep(.vc-popover-content *) {
+  background-color: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+:deep(.vc-popover-content > div) {
+  background-color: var(--white) !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+:deep(.vc-highlight) {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+:deep(.vc-popover-content .vc-highlight) {
+  display: none !important;
+}
+
+:deep(.vc-popover-content .vc-day-layer) {
+  display: none !important;
+}
+
+:deep(.vc-popover-content .vc-highlights) {
+  display: none !important;
+}
+
+:deep(.vc-popover-content .vc-dot) {
+  width: 8px !important;
+  height: 2px !important;
+  border-radius: 1px !important;
+  background-color: var(--black) !important;
+}
+
+/* Hide the popover arrow */
+:deep(.vc-popover-caret) {
+  display: none !important;
+}
+
 .calendar-legend {
   display: flex;
   gap: 1.5rem;
@@ -412,6 +481,10 @@ function isOverdue(dueDate) {
   transition: all 0.2s;
 }
 
+.deadline-item.not-started {
+  border-left-color: var(--burgundy);
+}
+
 .deadline-item.overdue {
   border-left-color: var(--royal-blue);
   background: #f5f5ff;
@@ -462,6 +535,19 @@ function isOverdue(dueDate) {
   color: #666;
   font-size: 0.9rem;
   margin: 0.25rem 0 0.75rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.overdue-badge {
+  background-color: var(--royal-blue);
+  color: var(--white);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border: 1px solid var(--black);
 }
 
 .deadline-item-actions {

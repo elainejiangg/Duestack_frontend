@@ -16,17 +16,15 @@
         <p>Manage your courses and organize deadlines by class</p>
       </RouterLink>
 
-      <div class="action-card coming-soon">
-        <h2 class="cinzel-title">📄 Documents</h2>
-        <p>Upload syllabi and extract deadlines with AI</p>
-        <span class="badge">Coming Soon</span>
-      </div>
+      <RouterLink to="/deadlines" class="action-card">
+        <h2 class="cinzel-title">📋 All Deadlines</h2>
+        <p>View and filter all your deadlines across all courses</p>
+      </RouterLink>
 
-      <div class="action-card coming-soon">
+      <RouterLink to="/deadlines?view=calendar" class="action-card">
         <h2 class="cinzel-title">📅 Calendar</h2>
-        <p>View all your deadlines in one place</p>
-        <span class="badge">Coming Soon</span>
-      </div>
+        <p>See your deadlines on an interactive calendar view</p>
+      </RouterLink>
     </div>
   </div>
 </template>
@@ -98,16 +96,6 @@ h1 {
   box-shadow: 6px 6px 0 var(--black);
 }
 
-.action-card.coming-soon {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.action-card.coming-soon:hover {
-  transform: none;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
 .action-card h2 {
   color: #2c3e50;
   font-size: 1.5rem;
@@ -118,19 +106,5 @@ h1 {
   color: #666;
   font-size: 0.95rem;
   line-height: 1.5;
-}
-
-.badge {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background-color: var(--royal-blue);
-  color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  opacity: 1;
-  z-index: 10;
 }
 </style>

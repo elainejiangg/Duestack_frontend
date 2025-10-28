@@ -21,7 +21,11 @@
             type="email"
             required
             placeholder="Enter your email"
+            @blur="validateEmail"
           />
+          <span v-if="validationErrors.email" class="field-error">{{
+            validationErrors.email
+          }}</span>
         </div>
         <div class="form-group">
           <label for="username">Username</label>
@@ -30,8 +34,12 @@
             v-model="formData.username"
             type="text"
             required
-            placeholder="Choose a username"
+            placeholder="Choose a username (min 3 characters, no spaces)"
+            @blur="validateUsername"
           />
+          <span v-if="validationErrors.username" class="field-error">{{
+            validationErrors.username
+          }}</span>
         </div>
         <div class="form-group">
           <label for="password">Password</label>
@@ -40,8 +48,12 @@
             v-model="formData.password"
             type="password"
             required
-            placeholder="Choose a password"
+            placeholder="Choose a password (min 8 characters)"
+            @blur="validatePassword"
           />
+          <span v-if="validationErrors.password" class="field-error">{{
+            validationErrors.password
+          }}</span>
         </div>
         <div v-if="error" class="error-message">
           {{ error }}
@@ -77,8 +89,62 @@ const formData = ref({
 
 const loading = ref(false);
 const error = ref(null);
+const validationErrors = ref({
+  email: null,
+  username: null,
+  password: null,
+});
+
+function validateEmail() {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!formData.value.email) {
+    validationErrors.value.email = "Email is required";
+  } else if (!emailRegex.test(formData.value.email)) {
+    validationErrors.value.email = "Please enter a valid email address";
+  } else {
+    validationErrors.value.email = null;
+  }
+}
+
+function validateUsername() {
+  if (!formData.value.username) {
+    validationErrors.value.username = "Username is required";
+  } else if (formData.value.username.length < 3) {
+    validationErrors.value.username = "Username must be at least 3 characters";
+  } else if (/\s/.test(formData.value.username)) {
+    validationErrors.value.username = "Username cannot contain spaces";
+  } else {
+    validationErrors.value.username = null;
+  }
+}
+
+function validatePassword() {
+  if (!formData.value.password) {
+    validationErrors.value.password = "Password is required";
+  } else if (formData.value.password.length < 8) {
+    validationErrors.value.password = "Password must be at least 8 characters";
+  } else {
+    validationErrors.value.password = null;
+  }
+}
+
+function validateForm() {
+  validateEmail();
+  validateUsername();
+  validatePassword();
+  return (
+    !validationErrors.value.email &&
+    !validationErrors.value.username &&
+    !validationErrors.value.password
+  );
+}
 
 async function handleRegister() {
+  if (!validateForm()) {
+    error.value = "Please fix the errors above before submitting";
+    return;
+  }
+
   loading.value = true;
   error.value = null;
 
@@ -193,6 +259,13 @@ input:focus {
   border-radius: 4px;
   margin-bottom: 1rem;
   font-size: 0.9rem;
+}
+
+.field-error {
+  display: block;
+  color: #c33;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
 }
 
 .login-link {

@@ -10,7 +10,11 @@
           type="text"
           required
           placeholder="e.g., 6.1040"
+          @blur="validateCourseCode"
         />
+        <span v-if="validationErrors.courseCode" class="field-error">{{
+          validationErrors.courseCode
+        }}</span>
       </div>
       <div class="form-group">
         <label for="title">Course Title</label>
@@ -20,7 +24,11 @@
           type="text"
           required
           placeholder="e.g., Software Design"
+          @blur="validateTitle"
         />
+        <span v-if="validationErrors.title" class="field-error">{{
+          validationErrors.title
+        }}</span>
       </div>
       <div v-if="error" class="error-message">
         {{ error }}
@@ -53,8 +61,43 @@ const formData = ref({
 
 const loading = ref(false);
 const error = ref(null);
+const validationErrors = ref({
+  courseCode: null,
+  title: null,
+});
+
+function validateCourseCode() {
+  if (!formData.value.courseCode) {
+    validationErrors.value.courseCode = "Course code is required";
+  } else if (formData.value.courseCode.length < 2) {
+    validationErrors.value.courseCode = "Course code is too short";
+  } else {
+    validationErrors.value.courseCode = null;
+  }
+}
+
+function validateTitle() {
+  if (!formData.value.title) {
+    validationErrors.value.title = "Course title is required";
+  } else if (formData.value.title.length < 3) {
+    validationErrors.value.title = "Course title must be at least 3 characters";
+  } else {
+    validationErrors.value.title = null;
+  }
+}
+
+function validateForm() {
+  validateCourseCode();
+  validateTitle();
+  return !validationErrors.value.courseCode && !validationErrors.value.title;
+}
 
 async function handleSubmit() {
+  if (!validateForm()) {
+    error.value = "Please fix the errors above before submitting";
+    return;
+  }
+
   loading.value = true;
   error.value = null;
 
@@ -141,6 +184,13 @@ input:focus {
   border-radius: 4px;
   margin-bottom: 1rem;
   font-size: 0.9rem;
+}
+
+.field-error {
+  display: block;
+  color: #c33;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
 }
 
 .form-actions {

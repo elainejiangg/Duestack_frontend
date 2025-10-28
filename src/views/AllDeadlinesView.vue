@@ -58,6 +58,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useAuthStore } from "@/stores/auth";
+import { useRoute } from "vue-router";
 import { deadlineService } from "@/services/deadlineService";
 import { courseService } from "@/services/courseService";
 import AllDeadlinesList from "@/components/AllDeadlinesList.vue";
@@ -65,6 +66,7 @@ import DeadlinesCalendar from "@/components/DeadlinesCalendar.vue";
 import EditDeadlineModal from "@/components/EditDeadlineModal.vue";
 
 const authStore = useAuthStore();
+const route = useRoute();
 
 const deadlines = ref([]);
 const courses = ref([]);
@@ -72,7 +74,9 @@ const loading = ref(false);
 const error = ref(null);
 const showEditModal = ref(false);
 const selectedDeadline = ref(null);
-const currentView = ref("list"); // 'list' or 'calendar'
+
+// Check if there's a 'view' query parameter, default to 'list'
+const currentView = ref(route.query.view === "calendar" ? "calendar" : "list");
 
 async function loadData() {
   loading.value = true;

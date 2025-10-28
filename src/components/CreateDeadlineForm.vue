@@ -10,11 +10,24 @@
           type="text"
           required
           placeholder="e.g., Assignment 4: Backend MVP"
+          @blur="validateTitle"
         />
+        <span v-if="validationErrors.title" class="field-error">{{
+          validationErrors.title
+        }}</span>
       </div>
       <div class="form-group">
         <label for="due">Due Date & Time</label>
-        <input id="due" v-model="formData.due" type="datetime-local" required />
+        <input
+          id="due"
+          v-model="formData.due"
+          type="datetime-local"
+          required
+          @blur="validateDueDate"
+        />
+        <span v-if="validationErrors.due" class="field-error">{{
+          validationErrors.due
+        }}</span>
       </div>
       <div class="form-group">
         <label for="source">Source</label>
@@ -66,8 +79,52 @@ const formData = ref({
 
 const loading = ref(false);
 const error = ref(null);
+const validationErrors = ref({
+  title: null,
+  due: null,
+});
+
+function validateTitle() {
+  if (!formData.value.title) {
+    validationErrors.value.title = "Title is required";
+  } else if (formData.value.title.length < 3) {
+    validationErrors.value.title = "Title must be at least 3 characters";
+  } else {
+    validationErrors.value.title = null;
+  }
+}
+
+function validateDueDate() {
+  if (!formData.value.due) {
+    validationErrors.value.due = "Due date is required";
+  } else {
+    const selectedDate = new Date(formData.value.due);
+    const now = new Date();
+
+    // Allow dates from the past only if they're within 24 hours (for flexibility)
+    const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+    if (selectedDate < twentyFourHoursAgo) {
+      validationErrors.value.due =
+        "Due date cannot be more than 24 hours in the past";
+    } else {
+      validationErrors.value.due = null;
+    }
+  }
+}
+
+function validateForm() {
+  validateTitle();
+  validateDueDate();
+  return !validationErrors.value.title && !validationErrors.value.due;
+}
 
 async function handleSubmit() {
+  if (!validateForm()) {
+    error.value = "Please fix the errors above before submitting";
+    return;
+  }
+
   loading.value = true;
   error.value = null;
 
@@ -155,6 +212,13 @@ select:focus {
   border-radius: 4px;
   margin-bottom: 1rem;
   font-size: 0.9rem;
+}
+
+.field-error {
+  display: block;
+  color: #c33;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
 }
 
 .form-actions {
