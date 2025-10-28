@@ -21,6 +21,9 @@
           <button @click="$emit('view-deadlines', course._id)" class="btn-view">
             View Deadlines
           </button>
+          <button @click="$emit('edit-course', course)" class="btn-edit">
+            Edit
+          </button>
         </div>
       </div>
     </div>
@@ -35,7 +38,7 @@ defineProps({
   },
 });
 
-defineEmits(["delete-course", "view-deadlines"]);
+defineEmits(["delete-course", "view-deadlines", "edit-course"]);
 </script>
 
 <style scoped>
@@ -141,19 +144,33 @@ h3 {
   gap: 0.5rem;
 }
 
-.btn-view {
+.btn-view,
+.btn-edit {
   flex: 1;
   padding: 0.5rem 1rem;
-  background-color: var(--yellow);
-  color: var(--black);
   border: 2px solid var(--black);
   border-radius: 4px;
   cursor: pointer;
   font-weight: 600;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
+}
+
+.btn-view {
+  background-color: var(--yellow);
+  color: var(--black);
 }
 
 .btn-view:hover {
   background-color: #ffc727;
+}
+
+.btn-edit {
+  background-color: var(--white);
+  color: var(--black);
+}
+
+.btn-edit:hover {
+  background-color: var(--light-gray);
+  transform: translateY(-1px);
 }
 </style>

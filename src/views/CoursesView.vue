@@ -24,6 +24,14 @@
       :courses="courses"
       @delete-course="handleDeleteCourse"
       @view-deadlines="handleViewDeadlines"
+      @edit-course="handleEditCourse"
+    />
+
+    <EditCourseModal
+      :show="showEditModal"
+      :course="selectedCourse"
+      @close="closeEditModal"
+      @save="handleSaveCourse"
     />
   </div>
 </template>
@@ -35,6 +43,7 @@ import { useAuthStore } from "@/stores/auth";
 import { courseService } from "@/services/courseService";
 import CreateCourseForm from "@/components/CreateCourseForm.vue";
 import CourseList from "@/components/CourseList.vue";
+import EditCourseModal from "@/components/EditCourseModal.vue";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -43,6 +52,8 @@ const courses = ref([]);
 const loading = ref(false);
 const error = ref(null);
 const showCreateForm = ref(false);
+const showEditModal = ref(false);
+const selectedCourse = ref(null);
 
 async function loadCourses() {
   loading.value = true;
@@ -81,6 +92,28 @@ async function handleDeleteCourse(courseId) {
 
 function handleViewDeadlines(courseId) {
   router.push(`/courses/${courseId}/deadlines`);
+}
+
+function handleEditCourse(course) {
+  selectedCourse.value = course;
+  showEditModal.value = true;
+}
+
+function closeEditModal() {
+  showEditModal.value = false;
+  selectedCourse.value = null;
+}
+
+async function handleSaveCourse({ courseId, newCourseCode, newTitle }) {
+  try {
+    await courseService.updateCourse(courseId, newCourseCode, newTitle);
+    // Reload courses to get the updated data
+    await loadCourses();
+    // Close modal
+    closeEditModal();
+  } catch (err) {
+    alert(err.message || "Failed to update course.");
+  }
 }
 
 onMounted(() => {
