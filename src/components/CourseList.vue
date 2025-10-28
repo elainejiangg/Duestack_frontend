@@ -48,6 +48,7 @@ defineEmits(["delete-course", "view-deadlines", "edit-course"]);
   border-radius: 4px;
   border: 2px solid var(--black);
   box-shadow: 4px 4px 0 var(--black);
+  width: 100%;
 }
 
 h2 {

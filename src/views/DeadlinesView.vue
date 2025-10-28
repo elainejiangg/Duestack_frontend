@@ -32,6 +32,14 @@
       :deadlines="deadlines"
       @delete-deadline="handleDeleteDeadline"
       @update-status="handleUpdateStatus"
+      @edit-deadline="handleEditDeadline"
+    />
+
+    <EditDeadlineModal
+      :show="showEditModal"
+      :deadline="selectedDeadline"
+      @close="closeEditModal"
+      @save="handleSaveDeadline"
     />
   </div>
 </template>
@@ -44,6 +52,7 @@ import { deadlineService } from "@/services/deadlineService";
 import { courseService } from "@/services/courseService";
 import CreateDeadlineForm from "@/components/CreateDeadlineForm.vue";
 import DeadlineList from "@/components/DeadlineList.vue";
+import EditDeadlineModal from "@/components/EditDeadlineModal.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -55,6 +64,8 @@ const deadlines = ref([]);
 const loading = ref(false);
 const error = ref(null);
 const showCreateForm = ref(false);
+const showEditModal = ref(false);
+const selectedDeadline = ref(null);
 
 async function loadCourse() {
   try {
@@ -122,6 +133,33 @@ async function handleUpdateStatus(deadlineId, newStatus) {
     alert(err.message || "Failed to update status.");
     // Reload to reset the UI
     await loadDeadlines();
+  }
+}
+
+function handleEditDeadline(deadline) {
+  selectedDeadline.value = deadline;
+  showEditModal.value = true;
+}
+
+function closeEditModal() {
+  showEditModal.value = false;
+  selectedDeadline.value = null;
+}
+
+async function handleSaveDeadline({ deadlineId, newTitle, newDue, newSource }) {
+  try {
+    await deadlineService.updateDeadline(
+      deadlineId,
+      newTitle,
+      newDue,
+      newSource
+    );
+    // Reload deadlines to get the updated data
+    await loadDeadlines();
+    // Close modal
+    closeEditModal();
+  } catch (err) {
+    alert(err.message || "Failed to update deadline.");
   }
 }
 

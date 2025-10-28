@@ -7,6 +7,7 @@
           <template v-if="authStore.isAuthenticated">
             <RouterLink to="/">Home</RouterLink>
             <RouterLink to="/courses">Courses</RouterLink>
+            <RouterLink to="/deadlines">All Deadlines</RouterLink>
             <RouterLink to="/about">About</RouterLink>
             <span class="user-info">{{ authStore.username }}</span>
             <button @click="handleLogout" class="btn-logout">Logout</button>

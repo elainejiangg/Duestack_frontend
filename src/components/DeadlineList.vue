@@ -55,6 +55,9 @@
             <option value="IN_PROGRESS">In Progress</option>
             <option value="DONE">Done</option>
           </select>
+          <button @click="$emit('edit-deadline', deadline)" class="btn-edit">
+            Edit
+          </button>
         </div>
       </div>
     </div>
@@ -71,10 +74,18 @@ const props = defineProps({
   },
 });
 
-defineEmits(["delete-deadline", "update-status"]);
+defineEmits(["delete-deadline", "update-status", "edit-deadline"]);
 
 const sortedDeadlines = computed(() => {
   return [...props.deadlines].sort((a, b) => {
+    // First, sort by completion status (DONE goes to end)
+    const aIsDone = (a.status || "NOT_STARTED") === "DONE";
+    const bIsDone = (b.status || "NOT_STARTED") === "DONE";
+
+    if (aIsDone && !bIsDone) return 1; // a is done, b is not -> a goes after b
+    if (!aIsDone && bIsDone) return -1; // b is done, a is not -> a goes before b
+
+    // If both have same completion status, sort by due date
     return new Date(a.due) - new Date(b.due);
   });
 });
@@ -103,6 +114,8 @@ function isOverdue(dueDate) {
   border-radius: 4px;
   border: 2px solid var(--black);
   box-shadow: 4px 4px 0 var(--black);
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 h2 {
@@ -122,6 +135,7 @@ h2 {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  align-items: center;
 }
 
 .deadline-card {
@@ -134,6 +148,40 @@ h2 {
   padding: 1.5rem;
   transition: transform 0.1s, box-shadow 0.1s;
   box-shadow: 3px 3px 0 var(--black);
+  width: 100%;
+  max-width: 700px;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 768px) {
+  .deadline-list {
+    max-width: 100%;
+    padding: 1rem;
+  }
+
+  .deadline-card {
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .deadline-list {
+    max-width: 750px;
+  }
+
+  .deadline-card {
+    max-width: 600px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .deadline-list {
+    max-width: 900px;
+  }
+
+  .deadline-card {
+    max-width: 700px;
+  }
 }
 
 .deadline-card:hover {
@@ -233,6 +281,7 @@ h3 {
 .deadline-actions {
   display: flex;
   gap: 0.5rem;
+  align-items: center;
 }
 
 .status-select {
@@ -242,6 +291,26 @@ h3 {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
+  min-width: 150px;
+  max-width: 200px;
+}
+
+.btn-edit {
+  padding: 0.5rem 1rem;
+  background-color: var(--white);
+  color: var(--black);
+  border: 2px solid var(--black);
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+.btn-edit:hover {
+  background-color: var(--light-gray);
+  transform: translateY(-1px);
 }
 
 .status-select:focus {

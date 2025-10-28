@@ -123,9 +123,12 @@ onMounted(() => {
 
 <style scoped>
 .courses-view {
-  max-width: 1200px;
+  max-width: 65vw;
   margin: 0 auto;
   padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .header {
@@ -133,6 +136,7 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+  width: 100%;
 }
 
 h1 {
@@ -141,6 +145,26 @@ h1 {
   margin: 0;
   font-weight: 700;
   letter-spacing: -1px;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 768px) {
+  .courses-view {
+    max-width: 95vw;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .courses-view {
+    max-width: 75vw;
+  }
+}
+
+@media (min-width: 1025px) {
+  .courses-view {
+    max-width: 65vw;
+    min-width: 700px;
+  }
 }
 
 .btn-toggle {

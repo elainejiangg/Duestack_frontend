@@ -98,6 +98,7 @@ function cancel() {
   border: 2px solid var(--black);
   box-shadow: 4px 4px 0 var(--black);
   margin-bottom: 2rem;
+  width: 100%;
 }
 
 h2 {

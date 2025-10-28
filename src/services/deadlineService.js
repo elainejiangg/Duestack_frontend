@@ -54,6 +54,15 @@ export const deadlineService = {
       courseId: course,
     });
   },
+
+  /**
+   * Get all deadlines for a user (across all courses)
+   */
+  async getAllDeadlinesByUser(userId) {
+    return await api.post("/DeadlineManagement/_getDeadlinesByAddedBy", {
+      userId: userId,
+    });
+  },
 };
 
 export default deadlineService;
