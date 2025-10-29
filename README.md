@@ -1,6 +1,6 @@
 # Assignment 4b
 
-<img src="Assignment4b-Oct21-assets/thumbnail.png" alt="DueStack Application Screenshot" width="1000" />
+<img src="Assignment4b-Oct28-assets/new-thumbnail.png" alt="DueStack Application Screenshot" width="1000" />
 
 ## Oct 28th Complete Deliverables:
 
