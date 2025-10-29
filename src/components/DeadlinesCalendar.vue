@@ -150,6 +150,11 @@ const calendarAttributes = computed(() => {
       color = "#ffd757"; // yellow - in progress
     }
 
+    const courseCode = getCourseDisplay(deadline.course);
+    const popoverLabel = courseCode
+      ? `(${courseCode}) ${deadline.title}`
+      : deadline.title;
+
     return {
       key: deadline._id,
       dates: dueDate,
@@ -160,7 +165,7 @@ const calendarAttributes = computed(() => {
         class: "deadline-dot",
       },
       popover: {
-        label: deadline.title,
+        label: popoverLabel,
       },
       customData: deadline,
     };

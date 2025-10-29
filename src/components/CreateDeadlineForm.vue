@@ -2,6 +2,29 @@
   <div class="create-deadline-form">
     <h2>Create New Deadline</h2>
     <form @submit.prevent="handleSubmit">
+      <!-- Course Selector (only shown when creating from All Deadlines) -->
+      <div v-if="showCourseSelector" class="form-group">
+        <label for="course">Course *</label>
+        <select
+          id="course"
+          v-model="selectedCourse"
+          required
+          @change="emit('course-selected', selectedCourse)"
+        >
+          <option value="">Select a course...</option>
+          <option
+            v-for="course in courses"
+            :key="course._id"
+            :value="course._id"
+          >
+            {{ course.courseCode }} - {{ course.title }}
+          </option>
+        </select>
+        <span v-if="validationErrors.course" class="field-error">{{
+          validationErrors.course
+        }}</span>
+      </div>
+
       <div class="form-group">
         <label for="title">Title</label>
         <input
@@ -29,15 +52,13 @@
           validationErrors.due
         }}</span>
       </div>
-      <div class="form-group">
+      <!-- Source is now pre-selected, no dropdown needed -->
+      <div v-if="!source" class="form-group">
         <label for="source">Source</label>
         <select id="source" v-model="formData.source" required>
           <option value="MANUAL">Manual Entry</option>
-          <option value="SYLLABUS">Syllabus</option>
           <option value="WEBSITE">Website</option>
           <option value="CANVAS">Canvas</option>
-          <option value="IMAGE">Image</option>
-          <option value="LLM_PARSED">AI Parsed</option>
         </select>
       </div>
       <div v-if="error" class="error-message">
@@ -61,25 +82,39 @@ import { ref } from "vue";
 const props = defineProps({
   courseId: {
     type: String,
-    required: true,
+    default: null, // Not required when showCourseSelector is true
   },
   userId: {
     type: String,
     required: true,
   },
+  source: {
+    type: String,
+    default: null, // If not provided, user can select from dropdown
+  },
+  courses: {
+    type: Array,
+    default: () => [], // List of all courses for the dropdown
+  },
+  showCourseSelector: {
+    type: Boolean,
+    default: false, // Show course selector when creating from All Deadlines
+  },
 });
 
-const emit = defineEmits(["deadline-created", "cancel"]);
+const emit = defineEmits(["deadline-created", "cancel", "course-selected"]);
 
+const selectedCourse = ref(props.courseId || "");
 const formData = ref({
   title: "",
   due: "",
-  source: "MANUAL",
+  source: props.source || "MANUAL", // Use provided source or default to MANUAL
 });
 
 const loading = ref(false);
 const error = ref(null);
 const validationErrors = ref({
+  course: null,
   title: null,
   due: null,
 });
@@ -113,10 +148,28 @@ function validateDueDate() {
   }
 }
 
+function validateCourse() {
+  if (props.showCourseSelector && !selectedCourse.value) {
+    validationErrors.value.course = "Please select a course";
+    return false;
+  }
+  validationErrors.value.course = null;
+  return true;
+}
+
 function validateForm() {
+  let isValid = true;
+
+  if (props.showCourseSelector) {
+    isValid = validateCourse() && isValid;
+  }
+
   validateTitle();
   validateDueDate();
-  return !validationErrors.value.title && !validationErrors.value.due;
+
+  return (
+    isValid && !validationErrors.value.title && !validationErrors.value.due
+  );
 }
 
 async function handleSubmit() {
@@ -168,6 +221,7 @@ function cancel() {
   border: 2px solid var(--black);
   box-shadow: 4px 4px 0 var(--black);
   margin-bottom: 2rem;
+  width: 100%;
 }
 
 h2 {

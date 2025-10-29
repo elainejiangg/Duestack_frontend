@@ -5,13 +5,14 @@ export const deadlineService = {
   /**
    * Create a new deadline
    */
-  async createDeadline(course, title, due, source, addedBy) {
+  async createDeadline(course, title, due, source, addedBy, websiteUrl) {
     return await api.post(API_ENDPOINTS.deadlines.create, {
       course,
       title,
       due,
       source,
       addedBy,
+      websiteUrl,
     });
   },
 

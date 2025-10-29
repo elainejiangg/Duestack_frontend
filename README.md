@@ -1,17 +1,28 @@
 # Assignment 4b
 
-<img src="Assignment4b-assets/thumbnail.png" alt="DueStack Application Screenshot" width="1000" />
+<img src="Assignment4b-Oct21-assets/thumbnail.png" alt="DueStack Application Screenshot" width="1000" />
 
-## Deliverables
+## Oct 28th Complete Deliverables:
 
-1. **[Updated User Journey](Assignment4b-assets/USER_JOURNEY.md)**
+1. **[Visual Design Study](<Assignment4b-Oct28-assets/6.1040%20Visual%20Inspo%20-%20DueStack%20(1).pdf>)**
 
-2. **[Screen Recording](Assignment4b-assets/recording-checkin-4b.mov)**
+   - **Alternative:** [Google Slides Presentation](https://docs.google.com/presentation/d/1__tKXgUeasagpQDpP_Ei6pshcn3f07D1M1u7-naokl0/edit?usp=sharing)
+
+2. **[Updated User Journey](Assignment4b-Oct28-assets/USER_JOURNEY.md)** 
+
+3. **[Updated Screen Recording](https://drive.google.com/file/d/1JZxMdX0P7tXpYUvvh-J2Fhy9J7PkljLw/view?usp=sharing)** 
+
+4. **[Backend Design Updates](../Duestack_backend/design/concepts/DueStack-specs/ASSIGNMENT_4B_UPDATES.md)** 
+
+---
+
+## Oct 21st Checkin Deliverables
+
+1. **[Updated User Journey](Assignment4b-Oct21-assets/USER_JOURNEY.md)**
+
+2. **[Screen Recording](Assignment4b-Oct21-assets/recording-checkin-4b.mov)**
 
    - **Alternative:** [Google Drive Video](https://drive.google.com/file/d/1w-uUkEvnyz7VUbl2JhV_xGUIKhSEYgW-/view?usp=sharing)
-
-3. **[Visual Design Study](<Assignment4b-assets/6.1040%20Visual%20Inspo%20-%20DueStack%20(1).pdf>)**
-   - **Alternative:** [Google Slides Presentation](https://docs.google.com/presentation/d/1__tKXgUeasagpQDpP_Ei6pshcn3f07D1M1u7-naokl0/edit?usp=sharing)
 
 ---
 

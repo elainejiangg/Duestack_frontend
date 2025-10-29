@@ -48,6 +48,56 @@
       <button @click="clearFilters" class="btn-clear-filters">
         Clear Filters
       </button>
+
+      <button
+        v-if="filteredAndSortedDeadlines.length > 0"
+        @click="toggleMultiSelectMode"
+        class="btn-multi-select"
+      >
+        {{ multiSelectMode ? "✕ Cancel" : "☑️ Select Multiple" }}
+      </button>
+    </div>
+
+    <!-- Bulk Actions Bar (only shows when in multi-select mode) -->
+    <div
+      v-if="multiSelectMode && filteredAndSortedDeadlines.length > 0"
+      class="bulk-actions-bar"
+    >
+      <button @click="toggleSelectAll" class="btn-select-all">
+        {{ allSelected ? "Deselect All" : "Select All" }}
+      </button>
+      <span class="selected-count"
+        >{{ selectedDeadlines.length }} selected</span
+      >
+
+      <div v-if="selectedDeadlines.length > 0" class="bulk-status-group">
+        <label for="bulk-status" class="bulk-label">Change Status:</label>
+        <select
+          id="bulk-status"
+          v-model="bulkStatusValue"
+          class="bulk-status-select"
+        >
+          <option value="">Select status...</option>
+          <option value="NOT_STARTED">Not Started</option>
+          <option value="IN_PROGRESS">In Progress</option>
+          <option value="DONE">Done</option>
+        </select>
+        <button
+          @click="handleBulkStatusChange"
+          :disabled="!bulkStatusValue"
+          class="btn-apply-status"
+        >
+          Apply
+        </button>
+      </div>
+
+      <button
+        v-if="selectedDeadlines.length > 0"
+        @click="handleBulkDelete"
+        class="btn-bulk-delete"
+      >
+        🗑️ Delete ({{ selectedDeadlines.length }})
+      </button>
     </div>
 
     <div v-if="deadlines.length === 0" class="empty-state">
@@ -68,9 +118,18 @@
           overdue: isOverdue(deadline.due),
           completed: (deadline.status || 'NOT_STARTED') === 'DONE',
           'in-progress': (deadline.status || 'NOT_STARTED') === 'IN_PROGRESS',
+          selected: isSelected(deadline._id),
         }"
       >
         <div class="deadline-header">
+          <input
+            v-if="multiSelectMode"
+            type="checkbox"
+            :id="`deadline-${deadline._id}`"
+            :checked="isSelected(deadline._id)"
+            @change="toggleSelection(deadline._id)"
+            class="deadline-checkbox"
+          />
           <div class="deadline-info">
             <div class="course-badge">
               {{ getCourseDisplay(deadline.course) }}
@@ -89,7 +148,18 @@
               </span>
             </p>
             <p class="deadline-meta">
-              <span class="source-badge">{{ deadline.source }}</span>
+              <span class="source-badge" :title="getSourceTooltip(deadline)">
+                {{ formatSource(deadline.source) }}
+              </span>
+              <a
+                v-if="deadline.source === 'LLM_PARSED' && deadline.websiteUrl"
+                @click.prevent="showDocuments(deadline)"
+                href="#"
+                class="doc-link"
+                title="View source documents"
+              >
+                📄
+              </a>
             </p>
           </div>
           <button
@@ -136,13 +206,24 @@ const props = defineProps({
   },
 });
 
-defineEmits(["delete-deadline", "update-status", "edit-deadline"]);
+const emit = defineEmits([
+  "delete-deadline",
+  "update-status",
+  "edit-deadline",
+  "bulk-delete",
+  "bulk-status-change",
+]);
 
 // Filter state
 const selectedCourse = ref("all");
 const selectedStatus = ref("all");
 const selectedTimeFilter = ref("all");
 const sortOrder = ref("asc");
+
+// Bulk selection state
+const multiSelectMode = ref(false);
+const selectedDeadlines = ref([]);
+const bulkStatusValue = ref("");
 
 // Computed: Filtered and Sorted Deadlines
 const filteredAndSortedDeadlines = computed(() => {
@@ -233,6 +314,127 @@ function formatDate(dateString) {
 
 function isOverdue(dueDate) {
   return new Date(dueDate) < new Date();
+}
+
+// Bulk selection functions
+const allSelected = computed(() => {
+  return (
+    filteredAndSortedDeadlines.value.length > 0 &&
+    selectedDeadlines.value.length === filteredAndSortedDeadlines.value.length
+  );
+});
+
+function isSelected(deadlineId) {
+  return selectedDeadlines.value.includes(deadlineId);
+}
+
+// Helper functions for source display
+function formatSource(source) {
+  if (source === "LLM_PARSED") {
+    return "AI-PARSED";
+  }
+  return source;
+}
+
+function getSourceTooltip(deadline) {
+  if (deadline.source === "LLM_PARSED" && deadline.websiteUrl) {
+    return `Extracted from: ${deadline.websiteUrl}`;
+  }
+  return "";
+}
+
+function showDocuments(deadline) {
+  if (!deadline.websiteUrl) return;
+
+  const urls = deadline.websiteUrl.split(", ").filter((url) => url.trim());
+
+  if (urls.length === 1) {
+    // Single document - open directly
+    window.open(urls[0], "_blank");
+  } else {
+    // Multiple documents - show alert with clickable links
+    const urlList = urls.map((url, i) => `${i + 1}. ${url}`).join("\n");
+    const message = `Source Documents (${urls.length}):\n\n${urlList}\n\nClick OK to open all documents in new tabs.`;
+
+    if (confirm(message)) {
+      urls.forEach((url) => window.open(url, "_blank"));
+    }
+  }
+}
+
+function toggleSelection(deadlineId) {
+  const index = selectedDeadlines.value.indexOf(deadlineId);
+  if (index === -1) {
+    selectedDeadlines.value.push(deadlineId);
+  } else {
+    selectedDeadlines.value.splice(index, 1);
+  }
+}
+
+function toggleSelectAll() {
+  if (allSelected.value) {
+    // Deselect all
+    selectedDeadlines.value = [];
+  } else {
+    // Select all visible (filtered) deadlines
+    selectedDeadlines.value = filteredAndSortedDeadlines.value.map(
+      (d) => d._id
+    );
+  }
+}
+
+function toggleMultiSelectMode() {
+  multiSelectMode.value = !multiSelectMode.value;
+  // Clear selections when exiting multi-select mode
+  if (!multiSelectMode.value) {
+    selectedDeadlines.value = [];
+  }
+}
+
+function handleBulkDelete() {
+  if (selectedDeadlines.value.length === 0) return;
+
+  const count = selectedDeadlines.value.length;
+  if (
+    confirm(
+      `Are you sure you want to delete ${count} deadline${
+        count > 1 ? "s" : ""
+      }?`
+    )
+  ) {
+    emit("bulk-delete", [...selectedDeadlines.value]);
+    selectedDeadlines.value = [];
+    // Exit multi-select mode after deletion
+    multiSelectMode.value = false;
+  }
+}
+
+function handleBulkStatusChange() {
+  if (selectedDeadlines.value.length === 0 || !bulkStatusValue.value) return;
+
+  const count = selectedDeadlines.value.length;
+  const statusLabel = bulkStatusValue.value
+    .split("_")
+    .map((word) => word.charAt(0) + word.slice(1).toLowerCase())
+    .join(" ");
+
+  if (
+    confirm(
+      `Change status of ${count} deadline${
+        count > 1 ? "s" : ""
+      } to "${statusLabel}"?`
+    )
+  ) {
+    emit(
+      "bulk-status-change",
+      [...selectedDeadlines.value],
+      bulkStatusValue.value
+    );
+    selectedDeadlines.value = [];
+    bulkStatusValue.value = "";
+    // Exit multi-select mode after status change
+    multiSelectMode.value = false;
+  }
 }
 </script>
 
@@ -450,6 +652,19 @@ h3 {
   font-weight: 700;
 }
 
+.doc-link {
+  display: inline-block;
+  margin-left: 0.4rem;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.doc-link:hover {
+  transform: scale(1.2);
+}
+
 .btn-delete {
   background: transparent;
   border: none;
@@ -545,5 +760,166 @@ h3 {
 
 .status-done:hover {
   border-color: #666;
+}
+
+/* Bulk Actions */
+.bulk-actions-bar {
+  padding: 1rem 1.5rem;
+  border-radius: 4px;
+  border: 2px solid var(--black);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  box-shadow: 2px 2px 0 var(--black);
+}
+
+.btn-multi-select {
+  padding: 0.5rem 1rem;
+  background-color: var(--white);
+  color: var(--black);
+  border: 2px solid var(--black);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 2px 2px 0 var(--black);
+  white-space: nowrap;
+}
+
+.btn-multi-select:hover {
+  background-color: var(--light-gray);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--black);
+}
+
+.btn-select-all {
+  padding: 0.5rem 1rem;
+  background-color: var(--royal-blue);
+  color: var(--white);
+  border: 2px solid var(--black);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 2px 2px 0 var(--black);
+}
+
+.btn-select-all:hover {
+  background-color: #1f1f66;
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--black);
+}
+
+.selected-count {
+  font-weight: 600;
+  color: var(--black);
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 4px;
+  border: 1px solid var(--black);
+}
+
+.btn-bulk-delete {
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: var(--white);
+  border: 2px solid var(--black);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 2px 2px 0 var(--black);
+}
+
+.btn-bulk-delete:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--black);
+}
+
+.bulk-status-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+  border: 1px dashed var(--black);
+}
+
+.bulk-label {
+  font-weight: 600;
+  color: var(--black);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.bulk-status-select {
+  padding: 0.4rem 0.75rem;
+  border: 2px solid var(--black);
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.85rem;
+  background-color: var(--white);
+}
+
+.bulk-status-select:focus {
+  outline: none;
+  border-color: var(--royal-blue);
+}
+
+.btn-apply-status {
+  padding: 0.4rem 0.75rem;
+  background-color: var(--yellow);
+  color: var(--black);
+  border: 2px solid var(--black);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 2px 2px 0 var(--black);
+}
+
+.btn-apply-status:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--black);
+}
+
+.btn-apply-status:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.deadline-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  margin-right: 1rem;
+  accent-color: var(--royal-blue);
+  flex-shrink: 0;
+}
+
+.deadline-card.selected {
+  border-color: var(--royal-blue);
+  border-width: 3px;
+  box-shadow: 0 0 0 2px rgba(40, 40, 128, 0.2);
+}
+
+.deadline-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.deadline-info {
+  flex: 1;
 }
 </style>

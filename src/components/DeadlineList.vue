@@ -31,7 +31,18 @@
               </span>
             </p>
             <p class="deadline-meta">
-              <span class="source-badge">{{ deadline.source }}</span>
+              <span class="source-badge" :title="getSourceTooltip(deadline)">
+                {{ formatSource(deadline.source) }}
+              </span>
+              <a
+                v-if="deadline.source === 'LLM_PARSED' && deadline.websiteUrl"
+                @click.prevent="showDocuments(deadline)"
+                href="#"
+                class="doc-link"
+                title="View source documents"
+              >
+                📄
+              </a>
             </p>
           </div>
           <button
@@ -90,6 +101,40 @@ const sortedDeadlines = computed(() => {
   });
 });
 
+// Helper functions for source display
+function formatSource(source) {
+  if (source === "LLM_PARSED") {
+    return "AI-PARSED";
+  }
+  return source;
+}
+
+function getSourceTooltip(deadline) {
+  if (deadline.source === "LLM_PARSED" && deadline.websiteUrl) {
+    return `Extracted from: ${deadline.websiteUrl}`;
+  }
+  return "";
+}
+
+function showDocuments(deadline) {
+  if (!deadline.websiteUrl) return;
+
+  const urls = deadline.websiteUrl.split(", ").filter((url) => url.trim());
+
+  if (urls.length === 1) {
+    // Single document - open directly
+    window.open(urls[0], "_blank");
+  } else {
+    // Multiple documents - show alert with clickable links
+    const urlList = urls.map((url, i) => `${i + 1}. ${url}`).join("\n");
+    const message = `Source Documents (${urls.length}):\n\n${urlList}\n\nClick OK to open all documents in new tabs.`;
+
+    if (confirm(message)) {
+      urls.forEach((url) => window.open(url, "_blank"));
+    }
+  }
+}
+
 function formatDate(dateString) {
   const date = new Date(dateString);
   return date.toLocaleString("en-US", {
@@ -114,8 +159,7 @@ function isOverdue(dueDate) {
   border-radius: 4px;
   border: 2px solid var(--black);
   box-shadow: 4px 4px 0 var(--black);
-  max-width: 900px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 h2 {
@@ -255,6 +299,19 @@ h3 {
   border: 1px solid var(--black);
   font-size: 0.75rem;
   font-weight: 700;
+}
+
+.doc-link {
+  display: inline-block;
+  margin-left: 0.4rem;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.doc-link:hover {
+  transform: scale(1.2);
 }
 
 .btn-delete {

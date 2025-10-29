@@ -8,18 +8,76 @@
         </h1>
         <h1 v-else class="cinzel-title">Deadlines</h1>
       </div>
-      <button @click="showCreateForm = !showCreateForm" class="btn-toggle">
-        {{ showCreateForm ? "Cancel" : "+ New Deadline" }}
-      </button>
+      <div class="header-actions">
+        <button @click="toggleCreateForm" class="btn-toggle">
+          {{ showCreateForm ? "Cancel" : "+ New Deadline" }}
+        </button>
+      </div>
     </div>
 
+    <!-- Source Selection -->
+    <div v-if="showCreateForm && !selectedSource" class="source-selector">
+      <h3>Select Deadline Source</h3>
+      <div class="source-options">
+        <button @click="selectedSource = 'MANUAL'" class="source-option">
+          ✏️ Manual Entry
+        </button>
+        <button
+          @click="selectedSource = 'AI_PARSED'"
+          class="source-option ai-option"
+        >
+          🤖 AI Document Extraction
+        </button>
+        <button
+          @click="
+            selectedSource = 'WEBSITE';
+            console.log(
+              '🔍 DeadlinesView - selectedSource set to:',
+              selectedSource
+            );
+          "
+          class="source-option ai-option"
+        >
+          🌐 AI Website Extraction
+        </button>
+        <button class="source-option disabled" disabled>
+          📚 Canvas (Coming Soon)
+        </button>
+      </div>
+    </div>
+
+    <!-- AI Extraction Interface -->
+    <AIDeadlineExtractor
+      v-if="
+        showCreateForm &&
+        selectedSource &&
+        ['AI_PARSED', 'WEBSITE'].includes(selectedSource)
+      "
+      :course-id="courseId"
+      :source="selectedSource"
+      @deadlines-created="handleAIDeadlinesCreated"
+      @cancel="resetCreateForm"
+    />
+
+    <!-- Manual Deadline Creation -->
     <CreateDeadlineForm
-      v-if="showCreateForm"
+      v-if="showCreateForm && selectedSource === 'MANUAL'"
       :course-id="courseId"
       :user-id="authStore.userId"
+      :source="selectedSource"
       @deadline-created="handleDeadlineCreated"
-      @cancel="showCreateForm = false"
+      @cancel="resetCreateForm"
     />
+
+    <div
+      v-if="showCreateForm && selectedSource === 'CANVAS'"
+      class="coming-soon"
+    >
+      <p class="coming-soon-text">
+        Canvas extraction is coming soon! Please choose another source for now.
+      </p>
+      <button @click="resetCreateForm" class="btn-secondary">Back</button>
+    </div>
 
     <div v-if="loading" class="loading">Loading deadlines...</div>
 
@@ -53,6 +111,7 @@ import { courseService } from "@/services/courseService";
 import CreateDeadlineForm from "@/components/CreateDeadlineForm.vue";
 import DeadlineList from "@/components/DeadlineList.vue";
 import EditDeadlineModal from "@/components/EditDeadlineModal.vue";
+import AIDeadlineExtractor from "@/components/AIDeadlineExtractor.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -64,6 +123,7 @@ const deadlines = ref([]);
 const loading = ref(false);
 const error = ref(null);
 const showCreateForm = ref(false);
+const selectedSource = ref(null); // 'MANUAL', 'AI_PARSED', 'WEBSITE', 'CANVAS'
 const showEditModal = ref(false);
 const selectedDeadline = ref(null);
 
@@ -106,6 +166,26 @@ async function handleDeadlineCreated(deadlineData) {
   } catch (err) {
     alert(err.message || "Failed to create deadline.");
   }
+}
+
+async function handleAIDeadlinesCreated(createdDeadlines) {
+  // AI extractor already created the deadlines, just refresh the list
+  resetCreateForm();
+  await loadDeadlines();
+
+  // Success! Deadlines are now visible in the list after reload
+}
+
+function toggleCreateForm() {
+  showCreateForm.value = !showCreateForm.value;
+  if (!showCreateForm.value) {
+    selectedSource.value = null;
+  }
+}
+
+function resetCreateForm() {
+  showCreateForm.value = false;
+  selectedSource.value = null;
 }
 
 async function handleDeleteDeadline(deadlineId) {
@@ -175,9 +255,12 @@ onMounted(() => {
 
 <style scoped>
 .deadlines-view {
-  max-width: 1200px;
+  max-width: 65vw;
   margin: 0 auto;
   padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .header {
@@ -185,6 +268,12 @@ onMounted(() => {
   justify-content: space-between;
   align-items: start;
   margin-bottom: 2rem;
+  width: 100%;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.75rem;
 }
 
 .btn-back {
@@ -230,6 +319,82 @@ h1 {
   box-shadow: 3px 3px 0 var(--black);
 }
 
+.source-selector {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 4px;
+  border: 2px solid var(--black);
+  box-shadow: 4px 4px 0 var(--black);
+  margin-bottom: 2rem;
+}
+
+.source-selector h3 {
+  font-family: "Cinzel", serif;
+  color: var(--black);
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.source-options {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.source-option {
+  flex: 1;
+  min-width: 150px;
+  padding: 1.5rem;
+  background: var(--white);
+  border: 2px solid var(--black);
+  border-radius: 4px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 2px 2px 0 var(--black);
+  text-align: center;
+}
+
+.source-option:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 var(--black);
+  background-color: var(--light-gray);
+}
+
+.source-option.ai-option {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: var(--white);
+}
+
+.source-option.ai-option:hover {
+  background: linear-gradient(135deg, #5568d3 0%, #663d8f 100%);
+}
+
+.source-option.disabled,
+.source-option.disabled:hover {
+  background: #f3f3f3;
+  color: #999;
+  cursor: not-allowed;
+  box-shadow: 2px 2px 0 var(--black);
+  transform: none;
+}
+
+.coming-soon {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  border: 2px dashed var(--black);
+  border-radius: 4px;
+  background: #fdf7e3;
+  text-align: center;
+}
+
+.coming-soon-text {
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  color: #555;
+}
+
 .loading {
   text-align: center;
   padding: 3rem;
@@ -243,5 +408,25 @@ h1 {
   padding: 1rem;
   border-radius: 4px;
   margin-bottom: 2rem;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 768px) {
+  .deadlines-view {
+    max-width: 95vw;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .deadlines-view {
+    max-width: 75vw;
+  }
+}
+
+@media (min-width: 1025px) {
+  .deadlines-view {
+    max-width: 65vw;
+    min-width: 700px;
+  }
 }
 </style>

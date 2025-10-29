@@ -19,7 +19,7 @@
         <p class="course-title">{{ course.title }}</p>
         <div class="course-actions">
           <button @click="$emit('view-deadlines', course._id)" class="btn-view">
-            View Deadlines
+            Manage Deadlines
           </button>
           <button @click="$emit('edit-course', course)" class="btn-edit">
             Edit
