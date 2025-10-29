@@ -10,7 +10,7 @@
 
 2. **[Updated User Journey](Assignment4b-Oct28-assets/USER_JOURNEY.md)**
 
-3. **[Updated Screen Recording](https://drive.google.com/file/d/1JZxMdX0P7tXpYUvvh-J2Fhy9J7PkljLw/view?usp=sharing)**
+3. **[Updated Screen Recording](https://www.dropbox.com/scl/fi/lquoto746apvkihnfc08l/My-Movie-8.mp4?rlkey=0mhe4mtggjb69mn86f18n8usx&st=gy6689tk&dl=0)**
 
 4. **[Backend Design Updates](https://github.com/elainejiangg/Duestack_backend/blob/main/design/concepts/DueStack-specs/ASSIGNMENT_4B_UPDATES.md)** 
 
