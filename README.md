@@ -8,11 +8,12 @@
 
    - **Alternative:** [Google Slides Presentation](https://docs.google.com/presentation/d/1__tKXgUeasagpQDpP_Ei6pshcn3f07D1M1u7-naokl0/edit?usp=sharing)
 
-2. **[Updated User Journey](Assignment4b-Oct28-assets/USER_JOURNEY.md)** 
+2. **[Updated User Journey](Assignment4b-Oct28-assets/USER_JOURNEY.md)**
 
-3. **[Updated Screen Recording](https://drive.google.com/file/d/1JZxMdX0P7tXpYUvvh-J2Fhy9J7PkljLw/view?usp=sharing)** 
+3. **[Updated Screen Recording](https://drive.google.com/file/d/1JZxMdX0P7tXpYUvvh-J2Fhy9J7PkljLw/view?usp=sharing)**
 
-4. **[Backend Design Updates](../Duestack_backend/design/concepts/DueStack-specs/ASSIGNMENT_4B_UPDATES.md)** 
+4. **[Backend Design Updates](https://github.com/elainejiangg/Duestack_backend/blob/main/design/concepts/DueStack-specs/ASSIGNMENT_4B_UPDATES.md)** 
+
 
 ---
 
