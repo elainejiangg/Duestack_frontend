@@ -1,5 +1,6 @@
 // Backend API base URL
-export const API_BASE_URL = "http://localhost:8000/api";
+// Uses environment variable for production (set in Render), defaults to /api for local dev
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 export const API_ENDPOINTS = {
   // UserIdentity
