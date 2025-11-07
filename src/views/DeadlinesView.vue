@@ -29,19 +29,10 @@
           🤖 AI Document Extraction
         </button>
         <button
-          @click="
-            selectedSource = 'WEBSITE';
-            console.log(
-              '🔍 DeadlinesView - selectedSource set to:',
-              selectedSource
-            );
-          "
+          @click="selectedSource = 'WEBSITE'"
           class="source-option ai-option"
         >
           🌐 AI Website Extraction
-        </button>
-        <button class="source-option disabled" disabled>
-          📚 Canvas (Coming Soon)
         </button>
       </div>
     </div>
@@ -68,16 +59,6 @@
       @deadline-created="handleDeadlineCreated"
       @cancel="resetCreateForm"
     />
-
-    <div
-      v-if="showCreateForm && selectedSource === 'CANVAS'"
-      class="coming-soon"
-    >
-      <p class="coming-soon-text">
-        Canvas extraction is coming soon! Please choose another source for now.
-      </p>
-      <button @click="resetCreateForm" class="btn-secondary">Back</button>
-    </div>
 
     <div v-if="loading" class="loading">Loading deadlines...</div>
 
@@ -123,15 +104,14 @@ const deadlines = ref([]);
 const loading = ref(false);
 const error = ref(null);
 const showCreateForm = ref(false);
-const selectedSource = ref(null); // 'MANUAL', 'AI_PARSED', 'WEBSITE', 'CANVAS'
+const selectedSource = ref(null); // 'MANUAL', 'AI_PARSED', 'WEBSITE'
 const showEditModal = ref(false);
 const selectedDeadline = ref(null);
 
 async function loadCourse() {
   try {
-    const allCourses = await courseService.getCoursesByCreator(
-      authStore.userId
-    );
+    // Creator is derived from session on backend
+    const allCourses = await courseService.getCoursesByCreator();
     course.value = allCourses.find((c) => c._id === courseId);
   } catch (err) {
     console.error("Failed to load course:", err);
@@ -154,12 +134,12 @@ async function loadDeadlines() {
 
 async function handleDeadlineCreated(deadlineData) {
   try {
+    // addedBy is automatically derived from session on backend
     await deadlineService.createDeadline(
       courseId,
       deadlineData.title,
       deadlineData.due,
-      deadlineData.source,
-      authStore.userId
+      deadlineData.source
     );
     showCreateForm.value = false;
     await loadDeadlines();
@@ -378,21 +358,6 @@ h1 {
   cursor: not-allowed;
   box-shadow: 2px 2px 0 var(--black);
   transform: none;
-}
-
-.coming-soon {
-  margin-top: 1.5rem;
-  padding: 1.5rem;
-  border: 2px dashed var(--black);
-  border-radius: 4px;
-  background: #fdf7e3;
-  text-align: center;
-}
-
-.coming-soon-text {
-  font-size: 0.95rem;
-  margin-bottom: 1rem;
-  color: #555;
 }
 
 .loading {

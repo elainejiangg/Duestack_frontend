@@ -29,7 +29,8 @@ export const useAuthStore = defineStore("auth", () => {
   async function logout() {
     try {
       if (sessionID.value) {
-        await authService.logout(sessionID.value);
+        // authService.logout now handles sessionID automatically
+        await authService.logout();
       }
     } finally {
       // Clear state

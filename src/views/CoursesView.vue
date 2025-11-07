@@ -60,7 +60,8 @@ async function loadCourses() {
   error.value = null;
 
   try {
-    const result = await courseService.getCoursesByCreator(authStore.userId);
+    // Creator is automatically derived from session on backend
+    const result = await courseService.getCoursesByCreator();
     // Backend returns array directly, not wrapped in an object
     courses.value = Array.isArray(result) ? result : [];
   } catch (err) {

@@ -154,6 +154,22 @@ input:focus {
   border-radius: 4px;
   margin-bottom: 1rem;
   font-size: 0.9rem;
+  border: 2px solid #c33;
+  font-weight: 600;
+  animation: shake 0.3s;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
 }
 
 .register-link {

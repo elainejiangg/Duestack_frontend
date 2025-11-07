@@ -1,12 +1,13 @@
-import api from "@/utils/api";
+import { publicRequest, apiRequest } from "@/utils/api";
 import { API_ENDPOINTS } from "@/config/api";
 
 export const authService = {
   /**
    * Register a new user
+   * This is a public route - no authentication needed
    */
   async register(user, username, password) {
-    return await api.post(API_ENDPOINTS.auth.register, {
+    return await publicRequest(API_ENDPOINTS.auth.register, {
       user,
       username,
       password,
@@ -15,9 +16,10 @@ export const authService = {
 
   /**
    * Login a user
+   * This is a public route - no authentication needed
    */
   async login(username, password) {
-    return await api.post(API_ENDPOINTS.auth.login, {
+    return await publicRequest(API_ENDPOINTS.auth.login, {
       username,
       password,
     });
@@ -25,19 +27,18 @@ export const authService = {
 
   /**
    * Logout a user
+   * This requires authentication - session derived from sessionID
    */
-  async logout(sessionID) {
-    return await api.post(API_ENDPOINTS.auth.logout, {
-      sessionID,
-    });
+  async logout() {
+    return await apiRequest(API_ENDPOINTS.auth.logout, {});
   },
 
   /**
    * Change user password
+   * This requires authentication - user derived from session
    */
-  async changePassword(user, oldPassword, newPassword) {
-    return await api.post(API_ENDPOINTS.auth.changePassword, {
-      user,
+  async changePassword(oldPassword, newPassword) {
+    return await apiRequest(API_ENDPOINTS.auth.changePassword, {
       oldPassword,
       newPassword,
     });

@@ -155,6 +155,11 @@ async function handleRegister() {
       name: formData.value.name,
     });
 
+    // Check if user creation was successful
+    if (!userResponse || !userResponse.user) {
+      throw new Error("Failed to create user identity. Please try again.");
+    }
+
     const userId = userResponse.user;
 
     // Step 2: Register authentication credentials and login
@@ -259,6 +264,22 @@ input:focus {
   border-radius: 4px;
   margin-bottom: 1rem;
   font-size: 0.9rem;
+  border: 2px solid #c33;
+  font-weight: 600;
+  animation: shake 0.3s;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
 }
 
 .field-error {

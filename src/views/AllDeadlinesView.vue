@@ -47,9 +47,6 @@
         >
           🌐 AI Website Extraction
         </button>
-        <button class="source-option disabled" disabled>
-          📚 Canvas (Coming Soon)
-        </button>
       </div>
     </div>
 
@@ -84,16 +81,6 @@
         @cancel="resetCreateForm"
         @course-selected="selectedCourseForCreation = $event"
       />
-    </div>
-
-    <div
-      v-if="showCreateDeadline && selectedSource === 'CANVAS'"
-      class="create-deadline-section coming-soon"
-    >
-      <p class="coming-soon-text">
-        Canvas extraction is coming soon! Please choose another source for now.
-      </p>
-      <button @click="resetCreateForm" class="btn-secondary">Back</button>
     </div>
 
     <div v-if="loading" class="loading">Loading deadlines...</div>
@@ -155,7 +142,7 @@ const error = ref(null);
 const showEditModal = ref(false);
 const selectedDeadline = ref(null);
 const showCreateDeadline = ref(false);
-const selectedSource = ref(null); // 'MANUAL', 'AI_PARSED', 'WEBSITE', 'CANVAS'
+const selectedSource = ref(null); // 'MANUAL', 'AI_PARSED', 'WEBSITE'
 const selectedCourseForCreation = ref(null);
 
 // Check if there's a 'view' query parameter, default to 'list'
@@ -166,16 +153,12 @@ async function loadData() {
   error.value = null;
 
   try {
-    // Load courses first
-    const coursesResult = await courseService.getCoursesByCreator(
-      authStore.userId
-    );
+    // Load courses first - creator is derived from session on backend
+    const coursesResult = await courseService.getCoursesByCreator();
     courses.value = Array.isArray(coursesResult) ? coursesResult : [];
 
-    // Load all deadlines for the user
-    const deadlinesResult = await deadlineService.getAllDeadlinesByUser(
-      authStore.userId
-    );
+    // Load all deadlines for the user - user is derived from session on backend
+    const deadlinesResult = await deadlineService.getAllDeadlinesByUser();
     deadlines.value = Array.isArray(deadlinesResult) ? deadlinesResult : [];
   } catch (err) {
     error.value = err.message || "Failed to load deadlines.";
@@ -324,12 +307,12 @@ async function handleDeadlineCreated(deadlineData) {
       return;
     }
 
+    // addedBy is automatically derived from session on backend
     await deadlineService.createDeadline(
       selectedCourseForCreation.value,
       deadlineData.title,
       deadlineData.due,
-      deadlineData.source,
-      authStore.userId
+      deadlineData.source
     );
 
     // Reload data to get proper course information populated
@@ -512,21 +495,6 @@ h1 {
   cursor: not-allowed;
   box-shadow: 2px 2px 0 var(--black);
   transform: none;
-}
-
-.coming-soon {
-  margin-top: 1.5rem;
-  padding: 1.5rem;
-  border: 2px dashed var(--black);
-  border-radius: 4px;
-  background: #fdf7e3;
-  text-align: center;
-}
-
-.coming-soon-text {
-  font-size: 0.95rem;
-  margin-bottom: 1rem;
-  color: #555;
 }
 
 .loading {

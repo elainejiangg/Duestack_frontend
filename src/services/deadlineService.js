@@ -1,17 +1,17 @@
-import api from "@/utils/api";
+import { apiRequest } from "@/utils/api";
 import { API_ENDPOINTS } from "@/config/api";
 
 export const deadlineService = {
   /**
    * Create a new deadline
+   * addedBy is automatically derived from session on backend
    */
-  async createDeadline(course, title, due, source, addedBy, websiteUrl) {
-    return await api.post(API_ENDPOINTS.deadlines.create, {
+  async createDeadline(course, title, due, source, websiteUrl) {
+    return await apiRequest(API_ENDPOINTS.deadlines.create, {
       course,
       title,
       due,
       source,
-      addedBy,
       websiteUrl,
     });
   },
@@ -20,7 +20,7 @@ export const deadlineService = {
    * Update a deadline
    */
   async updateDeadline(deadline, newTitle, newDue, newSource) {
-    return await api.post(API_ENDPOINTS.deadlines.update, {
+    return await apiRequest(API_ENDPOINTS.deadlines.update, {
       deadline,
       newTitle,
       newDue,
@@ -32,7 +32,7 @@ export const deadlineService = {
    * Set deadline status
    */
   async setStatus(deadline, status) {
-    return await api.post(API_ENDPOINTS.deadlines.setStatus, {
+    return await apiRequest(API_ENDPOINTS.deadlines.setStatus, {
       deadline,
       status,
     });
@@ -42,7 +42,7 @@ export const deadlineService = {
    * Delete a deadline
    */
   async deleteDeadline(deadline) {
-    return await api.post(API_ENDPOINTS.deadlines.delete, {
+    return await apiRequest(API_ENDPOINTS.deadlines.delete, {
       deadline,
     });
   },
@@ -51,18 +51,27 @@ export const deadlineService = {
    * Get deadlines by course (using query endpoint)
    */
   async getDeadlinesByCourse(course) {
-    return await api.post("/DeadlineManagement/_getDeadlinesByCourse", {
-      courseId: course,
-    });
+    const response = await apiRequest(
+      "/DeadlineManagement/_getDeadlinesByCourse",
+      {
+        courseId: course,
+      }
+    );
+    // Backend returns { results: [...] }
+    return response.results || response || [];
   },
 
   /**
    * Get all deadlines for a user (across all courses)
+   * User is automatically derived from session on backend
    */
-  async getAllDeadlinesByUser(userId) {
-    return await api.post("/DeadlineManagement/_getDeadlinesByAddedBy", {
-      userId: userId,
-    });
+  async getAllDeadlinesByUser() {
+    const response = await apiRequest(
+      "/DeadlineManagement/_getDeadlinesByAddedBy",
+      {}
+    );
+    // Backend returns { results: [...] }
+    return response.results || response || [];
   },
 };
 

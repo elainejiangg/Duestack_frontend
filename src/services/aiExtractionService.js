@@ -1,28 +1,28 @@
-import api from "@/utils/api";
+import { apiRequest } from "@/utils/api";
 
 /**
  * Service for AI-powered deadline extraction from documents
+ * All methods automatically use the authenticated user from session
  */
 export const aiExtractionService = {
   /**
    * Extract deadlines from PDF URLs using Gemini API
-   * @param {string} userId - User ID
+   * User is automatically derived from session on backend
    * @param {string} courseId - Course ID to associate deadlines with
    * @param {string[]} pdfUrls - Array of PDF URLs to process
    * @param {string} customPrompt - Optional custom instructions for the AI
    * @returns {Promise<{suggestions: string[]}>} Array of suggestion IDs
    */
-  async extractFromPDFs(userId, courseId, pdfUrls, customPrompt) {
+  async extractFromPDFs(courseId, pdfUrls, customPrompt) {
     // First, get or create a default extraction config
     const configId = await this.getDefaultExtractionConfig();
 
     console.log("🔧 Frontend sending custom prompt:", customPrompt);
 
     // Call the SuggestionManagement concept to extract deadlines
-    const response = await api.post(
+    const response = await apiRequest(
       "/SuggestionManagement/llmExtractFromPDFUrls",
       {
-        user: userId,
         course: courseId,
         pdfUrls,
         config: configId,
@@ -35,18 +35,17 @@ export const aiExtractionService = {
 
   /**
    * Extract deadlines from a course website URL
-   * @param {string} userId
+   * User is automatically derived from session on backend
    * @param {string} courseId
    * @param {string} websiteUrl
    * @param {string} customPrompt
    */
-  async extractFromWebsite(userId, courseId, websiteUrl, customPrompt) {
+  async extractFromWebsite(courseId, websiteUrl, customPrompt) {
     const configId = await this.getDefaultExtractionConfig();
 
-    const response = await api.post(
+    const response = await apiRequest(
       "/SuggestionManagement/llmExtractFromWebsite",
       {
-        user: userId,
         course: courseId,
         url: websiteUrl,
         config: configId,
@@ -59,21 +58,20 @@ export const aiExtractionService = {
 
   /**
    * Refine existing suggestions using AI without re-processing documents
-   * @param {string} userId - User ID
+   * User is automatically derived from session on backend
    * @param {Array} suggestions - Array of existing suggestions to refine
    * @param {string} refinementPrompt - Instructions for how to refine the suggestions
    * @returns {Promise<{suggestions: Array}>} Refined suggestions
    */
-  async refineSuggestions(userId, suggestions, refinementPrompt) {
+  async refineSuggestions(suggestions, refinementPrompt) {
     console.log(
       "🔧 Frontend calling refinement API with prompt:",
       refinementPrompt
     );
 
-    const response = await api.post(
+    const response = await apiRequest(
       "/SuggestionManagement/refineMultipleSuggestions",
       {
-        user: userId,
         suggestions: suggestions.map((s) => s._id), // Send just the IDs
         refinementPrompt: refinementPrompt,
       }
@@ -96,31 +94,28 @@ export const aiExtractionService = {
 
   /**
    * Get all unconfirmed suggestions for a user
-   * @param {string} userId - User ID
+   * User is automatically derived from session on backend
    * @returns {Promise<Array>} Array of suggestion objects
    */
-  async getUnconfirmedSuggestions(userId) {
-    const response = await api.post(
+  async getUnconfirmedSuggestions() {
+    const response = await apiRequest(
       "/SuggestionManagement/_getUnconfirmedSuggestionsByUser",
-      {
-        user: userId,
-      }
+      {}
     );
 
-    return response;
+    // Backend returns { results: [...] }
+    return response.results || response || [];
   },
 
   /**
    * Get all suggestions for a user
-   * @param {string} userId - User ID
+   * User is automatically derived from session on backend
    * @returns {Promise<Array>} Array of suggestion objects
    */
-  async getAllSuggestions(userId) {
-    const response = await api.post(
+  async getAllSuggestions() {
+    const response = await apiRequest(
       "/SuggestionManagement/_getSuggestionsByUser",
-      {
-        user: userId,
-      }
+      {}
     );
 
     console.log("🔧 getAllSuggestions raw response:", response);
@@ -128,11 +123,11 @@ export const aiExtractionService = {
     console.log("🔧 Is response an array?", Array.isArray(response));
     console.log("🔧 Is response.data an array?", Array.isArray(response.data));
 
-    // Backend returns array of suggestions directly
-    // The axios interceptor might have already unwrapped response.data
-    // So check if response itself is the array, or if it's in response.data
+    // Backend returns { results: [...] }
     let suggestionsArray;
-    if (Array.isArray(response)) {
+    if (response.results) {
+      suggestionsArray = response.results;
+    } else if (Array.isArray(response)) {
       suggestionsArray = response;
     } else if (Array.isArray(response.data)) {
       suggestionsArray = response.data;
@@ -149,16 +144,15 @@ export const aiExtractionService = {
 
   /**
    * Confirm a suggestion and convert it to a real deadline
+   * addedBy is automatically derived from session on backend
    * @param {string} suggestionId - Suggestion ID
    * @param {string} courseId - Course ID
-   * @param {string} userId - User ID (addedBy)
    * @returns {Promise<Object>} Deadline data
    */
-  async confirmSuggestion(suggestionId, courseId, userId) {
-    const response = await api.post("/SuggestionManagement/confirm", {
+  async confirmSuggestion(suggestionId, courseId) {
+    const response = await apiRequest("/SuggestionManagement/confirm", {
       suggestion: suggestionId,
       course: courseId,
-      addedBy: userId,
     });
 
     return response;
@@ -172,7 +166,7 @@ export const aiExtractionService = {
    * @returns {Promise<void>}
    */
   async editSuggestion(suggestionId, newTitle, newDue) {
-    const response = await api.post("/SuggestionManagement/editSuggestion", {
+    const response = await apiRequest("/SuggestionManagement/editSuggestion", {
       suggestion: suggestionId,
       newTitle,
       newDue,
@@ -188,7 +182,7 @@ export const aiExtractionService = {
   async getDefaultExtractionConfig() {
     // Try to create default config
     try {
-      const response = await api.post(
+      const response = await apiRequest(
         "/SuggestionManagement/createExtractionConfig",
         {
           name: `default-${Date.now()}`, // Use unique name to avoid conflicts

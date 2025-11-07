@@ -39,7 +39,6 @@
             <option value="MANUAL">Manual Entry</option>
             <option value="SYLLABUS">Syllabus</option>
             <option value="WEBSITE">Website</option>
-            <option value="CANVAS">Canvas</option>
             <option value="IMAGE">Image</option>
             <option value="LLM_PARSED">AI Parsed</option>
           </select>

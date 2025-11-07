@@ -15,15 +15,12 @@ export const API_ENDPOINTS = {
     login: "/UserAuthentication/login",
     logout: "/UserAuthentication/logout",
     changePassword: "/UserAuthentication/changePassword",
-    connectCanvas: "/UserAuthentication/connectCanvas",
-    disconnectCanvas: "/UserAuthentication/disconnectCanvas",
   },
 
   // CourseManagement
   courses: {
     create: "/CourseManagement/createCourse",
     update: "/CourseManagement/updateCourse",
-    setCanvasId: "/CourseManagement/setCanvasId",
     delete: "/CourseManagement/deleteCourse",
   },
 
@@ -46,7 +43,6 @@ export const API_ENDPOINTS = {
   // SuggestionManagement
   suggestions: {
     createExtractionConfig: "/SuggestionManagement/createExtractionConfig",
-    parseFromCanvas: "/SuggestionManagement/parseFromCanvas",
     llmExtractFromDocument: "/SuggestionManagement/llmExtractFromDocument",
     llmExtractFromMultipleDocuments:
       "/SuggestionManagement/llmExtractFromMultipleDocuments",

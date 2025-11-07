@@ -89,6 +89,18 @@ watch(
   { immediate: true }
 );
 
+// Reset loading state when modal is opened or closed
+watch(
+  () => props.show,
+  (newShow) => {
+    if (newShow) {
+      // Modal opened - reset states
+      loading.value = false;
+      error.value = null;
+    }
+  }
+);
+
 async function handleSubmit() {
   loading.value = true;
   error.value = null;

@@ -58,7 +58,6 @@
         <select id="source" v-model="formData.source" required>
           <option value="MANUAL">Manual Entry</option>
           <option value="WEBSITE">Website</option>
-          <option value="CANVAS">Canvas</option>
         </select>
       </div>
       <div v-if="error" class="error-message">

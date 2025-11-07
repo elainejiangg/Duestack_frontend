@@ -102,8 +102,8 @@ async function handleSubmit() {
   error.value = null;
 
   try {
+    // Creator is automatically derived from session on backend
     const result = await courseService.createCourse(
-      authStore.userId,
       formData.value.courseCode,
       formData.value.title
     );

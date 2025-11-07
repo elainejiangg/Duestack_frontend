@@ -1,13 +1,13 @@
-import api from "@/utils/api";
+import { apiRequest } from "@/utils/api";
 import { API_ENDPOINTS } from "@/config/api";
 
 export const courseService = {
   /**
    * Create a new course
+   * Creator is automatically derived from session on backend
    */
-  async createCourse(creator, courseCode, title) {
-    return await api.post(API_ENDPOINTS.courses.create, {
-      creator,
+  async createCourse(courseCode, title) {
+    return await apiRequest(API_ENDPOINTS.courses.create, {
       courseCode,
       title,
     });
@@ -17,7 +17,7 @@ export const courseService = {
    * Update a course
    */
   async updateCourse(course, newCourseCode, newTitle) {
-    return await api.post(API_ENDPOINTS.courses.update, {
+    return await apiRequest(API_ENDPOINTS.courses.update, {
       course,
       newCourseCode,
       newTitle,
@@ -25,31 +25,25 @@ export const courseService = {
   },
 
   /**
-   * Set Canvas ID for a course
-   */
-  async setCanvasId(course, canvasId) {
-    return await api.post(API_ENDPOINTS.courses.setCanvasId, {
-      course,
-      canvasId,
-    });
-  },
-
-  /**
    * Delete a course
    */
   async deleteCourse(course) {
-    return await api.post(API_ENDPOINTS.courses.delete, {
+    return await apiRequest(API_ENDPOINTS.courses.delete, {
       course,
     });
   },
 
   /**
    * Get courses by creator (using query endpoint)
+   * Creator is automatically derived from session on backend
    */
-  async getCoursesByCreator(creator) {
-    return await api.post("/CourseManagement/_getCoursesByCreator", {
-      creator,
-    });
+  async getCoursesByCreator() {
+    const response = await apiRequest(
+      "/CourseManagement/_getCoursesByCreator",
+      {}
+    );
+    // Backend returns { results: [...] }
+    return response.results || response || [];
   },
 };
 

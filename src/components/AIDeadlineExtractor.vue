@@ -428,8 +428,8 @@ async function extractDeadlines() {
         return;
       }
 
+      // User is automatically derived from session on backend
       result = await aiExtractionService.extractFromWebsite(
-        authStore.userId,
         courseIdToUse,
         urlToUse,
         customPrompt.value.trim() || undefined
@@ -451,8 +451,8 @@ async function extractDeadlines() {
         return;
       }
 
+      // User is automatically derived from session on backend
       result = await aiExtractionService.extractFromPDFs(
-        authStore.userId,
         courseIdToUse,
         validUrls,
         customPrompt.value.trim() || undefined // Pass custom prompt if provided
@@ -464,10 +464,8 @@ async function extractDeadlines() {
       return;
     }
 
-    // Fetch full suggestion details
-    const allSuggestions = await aiExtractionService.getAllSuggestions(
-      authStore.userId
-    );
+    // Fetch full suggestion details - user is automatically derived from session
+    const allSuggestions = await aiExtractionService.getAllSuggestions();
 
     console.log("🔧 All suggestions response:", allSuggestions);
     console.log("🔧 Result suggestions IDs:", result.suggestions);
@@ -543,11 +541,10 @@ async function confirmSelected() {
         `🔍 Confirming suggestion ${suggestionId} for course ${courseToUse}`
       );
 
-      // Confirm the suggestion
+      // Confirm the suggestion - addedBy is automatically derived from session
       const confirmResult = await aiExtractionService.confirmSuggestion(
         suggestionId,
-        courseToUse,
-        authStore.userId
+        courseToUse
       );
 
       console.log(`✅ Confirm result:`, confirmResult);
@@ -569,12 +566,12 @@ async function confirmSelected() {
         addedBy: confirmResult.addedBy,
       });
 
+      // addedBy is automatically derived from session on backend
       const deadlineResult = await deadlineService.createDeadline(
         confirmResult.course,
         confirmResult.title,
         confirmResult.due,
         confirmResult.source,
-        confirmResult.addedBy,
         confirmResult.websiteUrl // Pass document URLs
       );
 
@@ -656,9 +653,8 @@ async function refineSuggestions() {
     console.log("🔧 Refining suggestions with prompt:", refinementPrompt.value);
     console.log("🔧 Current suggestions:", suggestions.value);
 
-    // Call the refinement API
+    // Call the refinement API - user is automatically derived from session
     const response = await aiExtractionService.refineSuggestions(
-      authStore.userId,
       suggestions.value,
       refinementPrompt.value.trim()
     );
@@ -671,10 +667,8 @@ async function refineSuggestions() {
       return;
     }
 
-    // Reload ALL suggestions to get updated data
-    const allSuggestions = await aiExtractionService.getAllSuggestions(
-      authStore.userId
-    );
+    // Reload ALL suggestions to get updated data - user is automatically derived from session
+    const allSuggestions = await aiExtractionService.getAllSuggestions();
 
     console.log("🔧 All suggestions after reload:", allSuggestions);
     console.log("🔧 Refined suggestion IDs:", response.suggestions);
